@@ -1,5 +1,8 @@
-import prisma from "src/utils/db.server";
+import prisma from "../utils/db.server";
+import type { Request, Response } from 'express';
 import { hash, compare } from "bcrypt";
+import jwt from 'jsonwebtoken'
+import { error } from "console";
 
 type User = {
 	id: string;
@@ -7,42 +10,86 @@ type User = {
 	email: string;
 };
 
-type CreateUserInput = {
-	username: string;
-	email: string;
-	password: string;
-	createdAt: Date;
-	updatedAt: Date;
-};
+
+const generateJwt = (id: string, username: string) => {
+	return jwt.sign({ id, username }, process.env.SECRET_KEY, { expiresIn: '24h' })
+}
 
 export class UserService {
-	async createUser(data: CreateUserInput): Promise<User | { warningMessage: string }> {
-		const userExistsByUserName = await prisma.user.findUnique({
-			where: { username: data.username },
-		});
 
-		const userExistsByEmail = await prisma.user.findUnique({
-			where: { email: data.email },
-		});
+	async createUser(req: Request, res: Response): Promise<Response> {
+		try {
+			const { username, email, password } = req.body;
+			const userExistsByUserName = await prisma.user.findUnique({
+				where: { username },
+			});
 
-		if (userExistsByUserName) {
-			return { warningMessage: "Username already exists" };
-		}
+			const userExistsByEmail = await prisma.user.findUnique({
+				where: { email },
+			});
 
-		if (userExistsByEmail) {
-			return { warningMessage: "Email already exists" };
-		}
-
-		const hashedPassword = await hash(data.password, 5);
-		const user = await prisma.user.create({
-			data: {
-				username: data.username,
-				email: data.email,
-				password: hashedPassword,
+			if (userExistsByEmail) {
+				throw new Error("Email already exists");
+				// 	return res.status(400).json({ message: "Email already exists" });
 			}
-		})
-		return user;
+
+			if (userExistsByUserName) {
+				return res.status(400).json({ message: "Username already exists" });
+			}
+
+			const hashedPassword = await hash(password, 5);
+			const user = await prisma.user.create({
+				data: {
+					username,
+					email,
+					password: hashedPassword,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				}
+			})
+
+			return res.status(201).json({ message: "User created successfully", user });
+		}
+		catch (err) {
+			return res.status(500).json({ message: err.message });
+		}
 	}
+
+	async login(req: Request, res: Response): Promise<Response> {
+		try {
+			const { username, password } = req.body
+			const user = await prisma.user.findUnique({
+				where: {
+					username,
+				},
+			});
+
+			if (!user) {
+				return res.status(401).json({ message: "Invalid credentials" });
+			}
+
+			const isPasswordValid = await compare(password, user.password);
+
+			if (!isPasswordValid) {
+				return res.status(401).json({ message: "Invalid credentials" });
+			}
+
+			const result = {
+				id: user.id,
+				username: user.username,
+			};
+			const token = generateJwt(user.id, user.username)
+			return res.status(200).json({ message: "User logged in successfully", user: result, token });
+		} catch (error) {
+			res.status(500).json({ message: "Internal server error" });
+		}
+	}
+
+	async checkAuth(req: Request, res: Response): Promise<Response> {
+		const token = generateJwt(req.body.id, req.body.username)
+		return res.json({ message: 'User authorized', token })
+	}
+
 
 	async getUserById(id: string): Promise<User> {
 		const user = await prisma.user.findUnique({
