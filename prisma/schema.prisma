@@ -18,3 +18,20 @@ model User {
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
+
+model Tool {
+   id           String   @id @default(cuid())
+   manufacturer String
+   price        Int      @default(0)
+   vendorCode   String
+   name         String
+   type         String
+   description  String
+   images       String[]
+   inStock      Int      @default(0)
+   bestseller   Boolean  @default(false)
+   new          Boolean  @default(false)
+   popularity   Int
+   createdAt    DateTime @default(now())
+   updatedAt    DateTime @updatedAt
+}

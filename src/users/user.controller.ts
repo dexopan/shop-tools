@@ -2,7 +2,6 @@ import prisma from "../utils/db.server";
 import type { Request, Response } from 'express';
 import { hash, compare } from "bcrypt";
 import jwt from 'jsonwebtoken'
-import { error } from "console";
 
 type User = {
 	id: string;
@@ -10,12 +9,11 @@ type User = {
 	email: string;
 };
 
-
 const generateJwt = (id: string, username: string) => {
 	return jwt.sign({ id, username }, process.env.SECRET_KEY, { expiresIn: '24h' })
 }
 
-export class UserService {
+export class UserController {
 
 	async createUser(req: Request, res: Response): Promise<Response> {
 		try {
@@ -30,11 +28,11 @@ export class UserService {
 
 			if (userExistsByEmail) {
 				throw new Error("Email already exists");
-				// 	return res.status(400).json({ message: "Email already exists" });
+
 			}
 
 			if (userExistsByUserName) {
-				return res.status(400).json({ message: "Username already exists" });
+				throw new Error("Username already exists");
 			}
 
 			const hashedPassword = await hash(password, 5);
@@ -65,13 +63,13 @@ export class UserService {
 			});
 
 			if (!user) {
-				return res.status(401).json({ message: "Invalid credentials" });
+				throw new Error("Invalid credentials");
 			}
 
 			const isPasswordValid = await compare(password, user.password);
 
 			if (!isPasswordValid) {
-				return res.status(401).json({ message: "Invalid credentials" });
+				throw new Error("Invalid credentials");
 			}
 
 			const result = {
@@ -81,7 +79,7 @@ export class UserService {
 			const token = generateJwt(user.id, user.username)
 			return res.status(200).json({ message: "User logged in successfully", user: result, token });
 		} catch (error) {
-			res.status(500).json({ message: "Internal server error" });
+			res.status(500).json({ message: error.message });
 		}
 	}
 
