@@ -20,7 +20,7 @@ const types = [
 
 const seed = async () => {
 	const user = await prisma.tool.createMany({
-		data: [...Array(10)].map((_, i) => ({
+		data: [...Array(49)].map((_, i) => ({
 			manufacturer: manufacturers[Math.floor(Math.random() * manufacturers.length)],
 			type: types[Math.floor(Math.random() * types.length)],
 			price: faker.number.int({ min: 1000, max: 9999 }),
@@ -39,10 +39,6 @@ const seed = async () => {
 		}))
 	})
 }
-
-
-
-
 
 
 seed().catch(e => {

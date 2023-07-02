@@ -24,7 +24,7 @@ model Tool {
    manufacturer String
    price        Int      @default(0)
    vendorCode   String
-   name         String
+   name         String   @unique
    type         String
    description  String
    images       String[]
