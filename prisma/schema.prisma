@@ -15,6 +15,7 @@ model User {
    email     String   @unique
    username  String   @unique
    password  String
+   Basket    Basket?
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
@@ -32,6 +33,24 @@ model Tool {
    bestseller   Boolean  @default(false)
    new          Boolean  @default(false)
    popularity   Int
+   baskets      Basket[]
+   createdAt    DateTime @default(now())
+   updatedAt    DateTime @updatedAt
+}
+
+model Basket {
+   id           String   @id @default(cuid())
+   tools        Tool[]
+   user         User     @relation(fields: [userId], references: [id])
+   userId       String   @unique
+   manufacturer String
+   price        Int      @default(0)
+   name         String   @unique
+   type         String
+   image        String
+   inStock      Int      @default(0)
+   count        Int      @default(0)
+   totalPrice   Int      @default(0)
    createdAt    DateTime @default(now())
    updatedAt    DateTime @updatedAt
 }

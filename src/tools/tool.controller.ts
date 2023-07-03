@@ -10,7 +10,7 @@ export class ToolController {
 		try {
 			const { limit, offset } = req.query
 			const tools = await paginateAndFilterTools({ limit: Number(limit), offset: Number(offset) })
-			return res.json(tools)
+			return res.status(200).json(tools)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
 		}
@@ -19,25 +19,25 @@ export class ToolController {
 
 	async bestsellersTools(req: Request, res: Response): Promise<Response> {
 		const tools = await bestsellersTools()
-		return res.json(tools)
+		return res.status(200).json(tools)
 	}
 
 	async newTools(req: Request, res: Response): Promise<Response> {
 		const tools = await newTools()
-		return res.json(tools)
+		return res.status(200).json(tools)
 	}
 
 	async findToolById(req: Request, res: Response): Promise<Response> {
 		const { id } = req.params
 		const tool = await findToolById(id)
-		return res.json(tool)
+		return res.status(200).json(tool)
 	}
 
 	async findToolByName(req: Request, res: Response): Promise<Response> {
 		try {
 			const { name } = req.body
 			const tool = await findToolByName(name)
-			return res.json(tool)
+			return res.status(200).json(tool)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
 		}
@@ -48,7 +48,7 @@ export class ToolController {
 		try {
 			const { search } = req.body
 			const tool = await searchByString(search)
-			return res.json(tool)
+			return res.status(200).json(tool)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
 		}
