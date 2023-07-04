@@ -1,8 +1,5 @@
-import prisma from '../utils/db.server'
 import type { Request, Response } from 'express'
 import { paginateAndFilterTools, bestsellersTools, newTools, findToolById, findToolByName, searchByString } from './tool.service'
-
-
 
 
 export class ToolController {
@@ -54,5 +51,3 @@ export class ToolController {
 		}
 	}
 }
-
-export default ToolController
