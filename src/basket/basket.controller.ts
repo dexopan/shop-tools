@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { getAll, addToolToBasket, deleteAllToolsFromBasket } from './basket.service'
+import { getAll, addToolToBasket, deleteToolFromBasket, deleteAllToolsFromBasket } from './basket.service'
 import { Tool } from '@prisma/client'
 
 export class BasketController {
@@ -18,6 +18,26 @@ export class BasketController {
 			const { toolId, userId } = req.body
 			const toolToBasket = await addToolToBasket(toolId, userId)
 			return res.status(200).json(toolToBasket)
+		} catch (error) {
+			return res.status(500).json({ error: error.message })
+		}
+	}
+
+	async deleteToolFromBasket(req: Request, res: Response): Promise<Response> {
+		try {
+			const { toolId, userId } = req.body
+			const deleteTool = await deleteToolFromBasket(toolId, userId)
+			return res.status(200).json(deleteTool)
+		} catch (error) {
+			return res.status(500).json({ error: error.message })
+		}
+	}
+
+	async deleteAllToolsFromBasket(req: Request, res: Response): Promise<Response> {
+		try {
+			const { userId } = req.body
+			const deleteAllTools = await deleteAllToolsFromBasket(userId)
+			return res.status(200).json(deleteAllTools)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
 		}

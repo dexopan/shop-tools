@@ -20,7 +20,7 @@ const types = [
 
 const seed = async () => {
 	const user = await prisma.tool.createMany({
-		data: [...Array(49)].map((_, i) => ({
+		data: [...Array(19)].map((_, i) => ({
 			manufacturer: manufacturers[Math.floor(Math.random() * manufacturers.length)],
 			type: types[Math.floor(Math.random() * types.length)],
 			price: faker.number.int({ min: 1000, max: 9999 }),
@@ -32,6 +32,7 @@ const seed = async () => {
 			images: ['https://cdn.vseinstrumenti.ru/images/goods/stroitelnyj-instrument/shurupoverty/932444/1200x800/54563598.jpg',
 				'https://cdn.vseinstrumenti.ru/images/goods/stroitelnyj-instrument/shurupoverty/932444/560x504/54563601.jpg'],
 			inStock: faker.number.int({ min: 0, max: 10 }),
+			inBasket: 0,
 			bestseller: faker.datatype.boolean(),
 			new: faker.datatype.boolean(),
 			popularity: faker.number.int({ min: 0, max: 100 }),
