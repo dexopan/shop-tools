@@ -18,6 +18,8 @@ export async function getAll(username: string): Promise<Basket[]> {
 	return basket
 }
 
+
+
 export async function addToolToBasket(toolId: string, userId: string): Promise<Basket> {
 
 	const tool = await prisma.tool.findUnique({
@@ -32,29 +34,60 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 		}
 	})
 
+
 	if (!basket) {
 		const newBasket = await prisma.basket.create({
 			data: {
 				userId,
+				quantity: 1,
+				totalPrice: tool.priceOne,
 				tools: {
-					connect: [{
-						id: toolId,
-					}]
-				},
-				count: 1,
-				totalPrice: tool.price
-			}
-		})
-
-		await prisma.tool.update({
-			where: {
-				id: toolId
-			},
-			data: {
-				inBasket: 1
+					create: [{
+						count: 1,
+						price: tool.priceOne,
+						tool: {
+							connect: {
+								id: tool.id
+							}
+						}
+					}],
+				}
 			}
 		})
 		return newBasket
+	}
+
+	const toolsOnBaskets = await prisma.toolsOnBaskets.findUnique({
+		where: {
+			toolId_basketId: {
+				toolId: tool.id,
+				basketId: basket.id
+			}
+		}
+	})
+
+	if (!toolsOnBaskets) {
+		const addFirstToolToBasket = await prisma.basket.update({
+			where: {
+				userId
+			},
+			data: {
+				quantity: basket.quantity + 1,
+				totalPrice: basket.totalPrice + tool.priceOne,
+				tools: {
+					create: [{
+						count: 1,
+						price: tool.priceOne,
+						tool: {
+							connect: {
+								id: toolId
+							}
+						}
+					}]
+				}
+			}
+		})
+		return addFirstToolToBasket
 	}
 
 	const addToolToBasket = await prisma.basket.update({
@@ -62,92 +95,78 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 			userId
 		},
 		data: {
+			quantity: basket.quantity + 1,
+			totalPrice: basket.totalPrice + tool.priceOne,
 			tools: {
-				connect: [{
-					id: toolId
+				update: [{
+					where: {
+						toolId_basketId: {
+							toolId: tool.id,
+							basketId: basket.id
+						}
+					},
+					data: {
+						count: toolsOnBaskets.count + 1,
+						price: toolsOnBaskets.price + tool.priceOne,
+						tool: {
+							connect: {
+								id: toolId
+							}
+						}
+					},
 				}]
-			},
-			count: basket.count + 1,
-			totalPrice: basket.totalPrice + tool.price
+			}
 		}
 	})
-
-	await prisma.tool.update({
-		where: {
-			id: toolId
-		},
-		data: {
-			inBasket: tool.inBasket + 1
-		}
-	})
-
-
 	return addToolToBasket
 }
 
-// export async function updateCount(count: number, userId: string): Promise<{ count: number }> {
-// 	const updateCount = await prisma.basket.update({
-// 		where: { userId },
-// 		data: {
-// 			count
-// 		},
-// 		select: {
-// 			count: true
-// 		}
-// 	})
-// 	return updateCount
-// }
 
-// export async function totalPrice(totalPrice: number, userId: string): Promise<{ totalPrice: number }> {
-// 	const updateTotalPrice = await prisma.basket.update({
-// 		where: { userId },
-// 		data: {
-// 			totalPrice
-// 		},
-// 		select: {
-// 			totalPrice: true
-// 		}
-// 	})
-// 	return updateTotalPrice
-// }
 
 export async function deleteToolFromBasket(toolId: string, userId: string): Promise<Basket> {
 
-	const tool = await prisma.tool.findUnique({
-		where: {
-			id: toolId
-		}
-	})
 	const basket = await prisma.basket.findUnique({
 		where: {
 			userId
 		}
 	})
 
-	const basketUpdate = await prisma.basket.update({
-		where: { userId },
-		data: {
-			tools: {
-				disconnect: [{
-					id: toolId
-				}]
-			},
-			count: basket.count - 1,
-			totalPrice: basket.totalPrice - tool.price
+	const toolsOnBaskets = await prisma.toolsOnBaskets.findUnique({
+		where: {
+			toolId_basketId: {
+				toolId,
+				basketId: basket.id
+			}
 		}
 	})
 
-	await prisma.tool.update({
+	if (!toolsOnBaskets) {
+		return basket
+	}
+
+	const toolInBasketDelete = await prisma.toolsOnBaskets.delete({
 		where: {
-			id: toolId
+			toolId_basketId: {
+				toolId,
+				basketId: basket.id
+			}
+		},
+	})
+
+	const basketUpdate = await prisma.basket.update({
+		where: {
+			userId
 		},
 		data: {
-			inBasket: 0
+			quantity: basket.quantity - toolInBasketDelete.count,
+			totalPrice: basket.totalPrice - toolInBasketDelete.price,
 		}
 	})
 
 	return basketUpdate
 }
+
+
 
 export async function deleteAllToolsFromBasket(userId: string): Promise<void> {
 
@@ -156,11 +175,17 @@ export async function deleteAllToolsFromBasket(userId: string): Promise<void> {
 			userId
 		}
 	})
-	if (!basket) {
-		return
-	}
+
+	await prisma.toolsOnBaskets.deleteMany({
+		where: {
+			basketId: basket.id
+		},
+	})
+
 	await prisma.basket.delete({
-		where: { userId }
+		where: {
+			userId
+		}
 	})
 }
 

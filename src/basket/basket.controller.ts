@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express'
 import { getAll, addToolToBasket, deleteToolFromBasket, deleteAllToolsFromBasket } from './basket.service'
-import { Tool } from '@prisma/client'
 
 export class BasketController {
 	async getAll(req: Request, res: Response): Promise<Response> {

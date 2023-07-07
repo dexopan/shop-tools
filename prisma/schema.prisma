@@ -21,31 +21,43 @@ model User {
 }
 
 model Tool {
-   id           String   @id @default(cuid())
+   id           String           @id @default(cuid())
    manufacturer String
-   price        Int      @default(0)
+   priceOne     Int              @default(0)
    vendorCode   String
-   name         String   @unique
+   name         String           @unique
    type         String
    description  String
    images       String[]
-   inStock      Int      @default(0)
-   bestseller   Boolean  @default(false)
-   new          Boolean  @default(false)
+   inStock      Int              @default(0)
+   bestseller   Boolean          @default(false)
+   new          Boolean          @default(false)
    popularity   Int
-   inBasket     Int      @default(0)
-   baskets      Basket[]
-   createdAt    DateTime @default(now())
-   updatedAt    DateTime @updatedAt
+   baskets      ToolsOnBaskets[]
+   createdAt    DateTime         @default(now())
+   updatedAt    DateTime         @updatedAt
 }
 
 model Basket {
-   id         String   @id @default(cuid())
-   tools      Tool[]
-   user       User     @relation(fields: [userId], references: [id])
-   userId     String   @unique
-   count      Int      @default(0)
-   totalPrice Int      @default(0)
-   createdAt  DateTime @default(now())
-   updatedAt  DateTime @updatedAt
+   id         String           @id @default(cuid())
+   tools      ToolsOnBaskets[]
+   user       User             @relation(fields: [userId], references: [id])
+   userId     String           @unique
+   quantity   Int              @default(0)
+   totalPrice Int              @default(0)
+   createdAt  DateTime         @default(now())
+   updatedAt  DateTime         @updatedAt
+}
+
+model ToolsOnBaskets {
+   tool      Tool     @relation(fields: [toolId], references: [id])
+   toolId    String
+   basket    Basket   @relation(fields: [basketId], references: [id])
+   basketId  String
+   count     Int      @default(0)
+   price     Int      @default(0)
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+   @@id([toolId, basketId])
 }
