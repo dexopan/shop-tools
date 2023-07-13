@@ -1,45 +1,81 @@
+'use client';
+import styles from '@/styles/auth/index.module.scss';
+import { useRef } from 'react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+
 export default function Auth() {
+	const isMedia800 = useMediaQuery(800);
+	const switchCtn = useRef() as React.MutableRefObject<HTMLDivElement>;
+	const switchC1 = useRef() as React.MutableRefObject<HTMLDivElement>;
+	const switchC2 = useRef() as React.MutableRefObject<HTMLDivElement>;
+	const switchCircle1 = useRef() as React.MutableRefObject<HTMLDivElement>;
+	const switchCircle2 = useRef() as React.MutableRefObject<HTMLDivElement>;
+	const aContainer = useRef() as React.MutableRefObject<HTMLDivElement>;
+	const bContainer = useRef() as React.MutableRefObject<HTMLDivElement>;
+
+	function switchForm() {
+		switchCtn.current.classList.add(styles.is_gx);
+		setTimeout(() => switchCtn.current.classList.remove(styles.is_gx), 1500)
+		switchCtn.current.classList.toggle(styles.is_txr);
+		switchCircle1.current.classList.toggle(styles.is_txr);
+		switchCircle2.current.classList.toggle(styles.is_txr);
+		switchC1.current.classList.toggle(styles.is_hidden);
+		switchC2.current.classList.toggle(styles.is_hidden);
+		aContainer.current.classList.toggle(styles.is_txl);
+		bContainer.current.classList.toggle(styles.is_txl);
+		bContainer.current.classList.toggle(styles.is_z200);
+	}
+
 	return (
-		<div className="main">
-			<div className="container a_container" id="a_container">
-				<form className="form" id="a_form" method="" action="">
-					<h2 className="form_title title">Create Account</h2>
-					<div className="form__icons">
-						<img className="form__icon" src="" />
-					</div><span className="form__span">or use email for registration</span>
-					<input className="form__input" type="text" placeholder="Name" />
-					<input className="form__input" type="text" placeholder="Email" />
-					<input className="form__input" type="password" placeholder="Password" />
-					<button className="form__button button submit">SIGN UP</button>
-				</form>
-			</div>
-			<div className="container b_container" id="b_container">
-				<form className="form" id="b_form" method="" action="">
-					<h2 className="form_title title">Sign in to Website</h2>
-					<div className="form__icons">
-						<img className="form__icon" src="" alt="" />
-						<img className="form__icon" src="" />
-						<img className="form__icon" src="" />
-					</div><span className="form__span">or use your email account</span>
-					<input className="form__input" type="text" placeholder="Email" />
-					<input className="form__input" type="password" placeholder="Password" />
-					<a className="form__link">Forgot your password?</a>
-					<button className="form__button button submit">SIGN IN</button>
-				</form>
-			</div>
-			<div className="switch" id="switch-cnt">
-				<div className="switch__circle"></div>
-				<div className="switch__circle switch__circle--t"></div>
-				<div className="switch__container" id="switch-c1">
-					<h2 className="switch__title title">Welcome Back !</h2>
-					<p className="switch__description description">To keep connected with us please login with your personal info</p>
-					<button className="switch__button button switch-btn">SIGN IN</button>
+		<div className={styles.main}>
+
+			<div ref={aContainer} className={`${styles.container} ${styles.a_container}`} id="a_container">
+				<div className={styles.container_inner}>
+					<form className={styles.form}>
+						<h2 className={`${styles.title} ${styles.form__title}`}>Create Account</h2>
+						<input className={styles.form__input} type="text" placeholder="Name" />
+						<input className={styles.form__input} type="text" placeholder="Email" />
+						<input className={styles.form__input} type="password" placeholder="Password" />
+						<button className={`${styles.button} ${styles.form__button} ${styles.submit}`}>SIGN UP</button>
+					</form>
 				</div>
-				<div className="switch__container is-hidden" id="switch-c2">
-					<h2 className="switch__title title">Hello Friend !</h2>
-					<p className="switch__description description">Enter your personal details and start journey with us</p>
-					<button className="switch__button button switch-btn">SIGN UP</button>
+			</div>
+
+			<div ref={bContainer} className={`${styles.container} ${styles.b_container}`} id="b_container">
+				<div className={styles.container_inner}>
+					<form className={styles.form} >
+						<h2 className={`${styles.title} ${styles.form__title}`}>Sign in to Website</h2>
+						<input className={styles.form__input} type="text" placeholder="Email" />
+						<input className={styles.form__input} type="password" placeholder="Password" />
+						<button className={`${styles.button} ${styles.form__button} ${styles.submit}`}>SIGN IN</button>
+					</form>
 				</div>
+			</div>
+
+			<div ref={switchCtn} className={styles.switch} id="switch-cnt">
+				<div ref={switchCircle1} className={styles.switch__circle}></div>
+				<div ref={switchCircle2} className={`${styles.switch__circle} ${styles.switch__circle__t}`}></div>
+
+				<div ref={switchC1} className={styles.switch__container} id="switch-c1">
+					{!isMedia800 && (
+						<>
+							<h2 className={`${styles.switch__title} ${styles.title}`}>Welcome Back !</h2>
+							<p className={`${styles.switch__description} ${styles.description}`}>To keep connected with us please login with your personal info</p>
+						</>
+					)}
+					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn}`}>SIGN IN</button>
+				</div>
+
+				<div ref={switchC2} className={`${styles.switch__container} ${styles.is_hidden}`} id="switch-c2">
+					{!isMedia800 && (
+						<>
+							<h2 className={`${styles.switch__title} ${styles.title}`}>Hello Friend !</h2>
+							<p className={`${styles.switch__description} ${styles.description}`}>Enter your personal details and start journey with us</p>
+						</>
+					)}
+					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn}`}>SIGN UP</button>
+				</div>
+
 			</div>
 		</div>
 	)
