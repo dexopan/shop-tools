@@ -12,27 +12,7 @@ $purple: #4B70E2;
 
 $transition: 1.25s;
 
-
 /**/
-.main {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  padding: 25px;
-  background-color: $neu-1;
-  box-shadow:
-    10px 10px 10px $neu-2,
-    -10px -10px 10px $white;
-  border-radius: 12px;
-  overflow: hidden;
-
-  &.dark_mode {
-    background-color: #2d2d2d;
-    box-shadow:
-      10px 10px 10px #2d2d2d,
-      -10px -10px 10px $black;
-  }
-}
 .main {
 	position: relative;
 	width: 100%;
@@ -102,9 +82,17 @@ $transition: 1.25s;
             opacity: 1;
             transition: .15s;
             cursor: pointer;
-
         }
     }
+
+	 &__label {
+		position: relative;
+	 }
+  
+	 &__label:not(:last-child) {
+		margin-bottom: 15px;
+	 }
+
     &__input{
         width: 350px;
         height: 40px;
@@ -294,30 +282,30 @@ $transition: 1.25s;
 
     &__circle{
         position: absolute;
-        width: 500px;
-        height: 500px;
+        width: 750px;
+        height: 750px;
         border-radius: 50%;
 		background-color: $neu-1;
 		box-shadow:
 			inset 8px 8px 12px $neu-2,
 			inset -8px -8px 12px $white;
 
-		&.dark_mode {
+        bottom: -50%;
+        left: -60%;
+        transition: $transition background-color 0s;
+
+		  &.dark_mode {
 			background-color: #2d2d2d;
 			box-shadow:
 			8px 8px 16px #2d2d2d,
 			-8px -8px 16px $black;
 		}	
 
-        bottom: -60%;
-        left: -60%;
-        transition: $transition background-color 0s;
-
         &__t{
             top: -30%;
-            left: 60%;
-            width: 300px;
-            height: 300px;
+            left: 40%;
+            width: 500px;
+            height: 500px;
         }
     }
 
@@ -413,40 +401,29 @@ $transition: 1.25s;
  }
  
  @keyframes is-gx {
- 
-	0%,	10%,	100% {
-	  width: 40%;
- 
-	  @media (max-width: 800px) {
-		 width: 100px;
-	  }
+	0%,	10%,	100% { width: 40%;
+	@media (max-width: 800px) { width: 100px;}
 	}
  
-	30%,	50% {
-	  width: 500px;
- 
-	  @media (max-width: 800px) {
-		 width: 100px;
-	  }
+	30%,	50% {  width: 500px;
+	  @media (max-width: 800px) { width: 100px;}
 	}
  }
  
  @keyframes is-gx-mobile {
-	0%,	10%,	100% {
-	  width: 100px;
-	}
- 
-	30%,	50% {
-	  width: 200px;
-	}
+	0%,	10%,	100% { width: 100px}
+	30%,	50% {	width: 200px;}
  }
  
  @keyframes is-gx-mobile430 {
-	0%,	10%,	100% {
-	  width: 75px;
-	}
- 
-	30%,	50% {
-	  width: 150px;
-	}
+	0%,	10%,	100% { width: 75px;}
+	30%,	50% {	width: 150px;}
  }
+
+ .error__alert {
+  font-size: 12px;
+  color: red;
+  position: absolute;
+  left: 10px;
+  bottom: -15px;
+}
