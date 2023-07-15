@@ -5,7 +5,7 @@ import styles from '@/styles/auth/index.module.scss';
 const NameInput = ({ register, error }: IAuthProps) => {
 	return (
 		<label className={styles.form__label} htmlFor="">
-			<input {...register('name', {
+			<input {...register('username', {
 				required: 'Name is required',
 				minLength: 3,
 				maxLength: 20,
@@ -14,13 +14,13 @@ const NameInput = ({ register, error }: IAuthProps) => {
 					message: 'Name is invalid'
 				}
 			})} className={styles.form__input} type="text" placeholder="Name" />
-			{error.name && (
-				<span className={styles.error__alert}>{error.name?.message}</span>
+			{error.username && (
+				<span className={styles.error__alert}>{error.username?.message}</span>
 			)}
-			{error.name && error.name.type === 'minLength' && (
+			{error.username && error.username.type === 'minLength' && (
 				<span className={styles.error__alert}>Name is too short</span>
 			)}
-			{error.name && error.name.type === 'maxLength' && (
+			{error.username && error.username.type === 'maxLength' && (
 				<span className={styles.error__alert}>Name is too long</span>
 			)}
 		</label>
