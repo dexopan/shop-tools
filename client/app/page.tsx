@@ -1,5 +1,7 @@
 import Head from "next/head"
 import Auth from "./auth/page"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 export default function Main() {
 
@@ -12,6 +14,14 @@ export default function Main() {
 				<meta charSet="UTF-8" />
 			</Head>
 			<Auth />
+			<ToastContainer
+				position="bottom-right"
+				hideProgressBar={false}
+				closeOnClick
+				rtl={false}
+				limit={1}
+				theme="light"
+			/>
 		</>
 
 	)

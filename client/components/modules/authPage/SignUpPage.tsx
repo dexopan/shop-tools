@@ -1,33 +1,41 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import NameInput from '@/components/elements/authPage/NameInput';
 import EmailInput from '@/components/elements/authPage/EmailInput';
 import PasswordInput from '@/components/elements/authPage/PasswordInput';
-import { useForm } from 'react-hook-form';
+import { signUp } from '@/http/api/auth';
+import { showAuthError } from '@/utils/errors';
 import { IInputs } from '@/types/auth';
 import styles from '@/styles/auth/index.module.scss';
-import { signUp } from '@/http/api/auth';
-import { toast } from 'react-toastify';
+import spinnerStyle from '@/styles/spinner/index.module.scss';
 
 const SignUpPage = ({ switchform }: { switchform: () => void }) => {
+
+	const [spinner, setSpinner] = useState(false);
 
 	const { register, handleSubmit, formState: { errors }, resetField } = useForm<IInputs>();
 
 	const onSubmit = async (data: IInputs) => {
 		try {
-			const userData = await signUp({
+			setSpinner(true);
+			const newUser = await signUp({
 				url: '/api/user/register',
 				username: data.username,
 				email: data.email,
 				password: data.password
 			});
 
-			console.log(userData)
+			if (newUser) {
+				resetField('username');
+				resetField('email');
+				resetField('password');
+				switchform();
+			}
 
-			resetField('username');
-			resetField('email');
-			resetField('password');
-			switchform();
 		} catch (error) {
-			toast.error((error as Error).message);
+			showAuthError(error)
+		} finally {
+			setSpinner(false);
 		}
 	}
 	return (
@@ -36,7 +44,9 @@ const SignUpPage = ({ switchform }: { switchform: () => void }) => {
 			<NameInput register={register} error={errors} />
 			<EmailInput register={register} error={errors} />
 			<PasswordInput register={register} error={errors} />
-			<button className={`${styles.button} ${styles.form__button} ${styles.submit}`}>SIGN UP</button>
+			<button className={`${styles.button} ${styles.form__button} ${styles.submit}`}>
+				{spinner ? <div className={spinnerStyle.spinner} /> : 'SIGN UP'}
+			</button>
 		</form>
 	)
 }

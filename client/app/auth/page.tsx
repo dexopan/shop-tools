@@ -1,8 +1,9 @@
 'use client';
 import { useRef } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import styles from '@/styles/auth/index.module.scss';
 import SignUpPage from '@/components/modules/authPage/SignUpPage';
+import SignInPage from '@/components/modules/authPage/SignInPage';
+import styles from '@/styles/auth/index.module.scss';
 
 
 export default function Auth() {
@@ -39,12 +40,7 @@ export default function Auth() {
 
 			<div ref={bContainer} className={`${styles.container} ${styles.b_container}`} id="b_container">
 				<div className={styles.container_inner}>
-					<form className={styles.form} >
-						<h2 className={`${styles.title} ${styles.form__title}`}>Sign in to Website</h2>
-						<input className={styles.form__input} type="text" placeholder="Email" />
-						<input className={styles.form__input} type="password" placeholder="Password" />
-						<button className={`${styles.button} ${styles.form__button} ${styles.submit}`}>SIGN IN</button>
-					</form>
+					<SignInPage />
 				</div>
 			</div>
 

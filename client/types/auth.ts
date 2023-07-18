@@ -17,3 +17,9 @@ export interface ISingUp {
 	password: string;
 	email: string;
 }
+
+export interface ISingIn {
+	url: string;
+	username: string;
+	password: string;
+}
