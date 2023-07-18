@@ -27,12 +27,11 @@ export class UserController {
 			});
 
 			if (userExistsByEmail) {
-				throw new Error("Email already exists");
-
+				return res.status(401).json({ message: 'Email already exists' })
 			}
 
 			if (userExistsByUserName) {
-				throw new Error("Username already exists");
+				return res.status(401).json({ message: 'Username already exists' })
 			}
 
 			const hashedPassword = await hash(password, 5);
@@ -63,13 +62,13 @@ export class UserController {
 			});
 
 			if (!user) {
-				return res.status(401).json({ message: 'Invalid username or password' })
+				return res.status(400).json({ message: 'Invalid username or password' })
 			}
 
 			const isPasswordValid = await compare(password, user.password);
 
 			if (!isPasswordValid) {
-				return res.status(401).json({ message: 'Invalid username or password' })
+				return res.status(400).json({ message: 'Invalid username or password' })
 			}
 			else {
 				const token = generateJwt(user.id, user.username)
