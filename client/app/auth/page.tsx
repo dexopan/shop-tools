@@ -3,6 +3,8 @@ import { useRef } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import SignUpPage from '@/components/modules/authPage/SignUpPage';
 import SignInPage from '@/components/modules/authPage/SignInPage';
+import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
+import { useAppSelector } from '@/store';
 import styles from '@/styles/auth/index.module.scss';
 
 
@@ -15,6 +17,9 @@ export default function Auth() {
 	const switchCircle2 = useRef() as React.MutableRefObject<HTMLDivElement>;
 	const aContainer = useRef() as React.MutableRefObject<HTMLDivElement>;
 	const bContainer = useRef() as React.MutableRefObject<HTMLDivElement>;
+
+	const theme = useAppSelector(state => state.theme.theme)
+	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 
 	function switchForm() {
 		switchCtn.current.classList.add(styles.is_gx);
@@ -30,42 +35,45 @@ export default function Auth() {
 	}
 
 	return (
-		<div className={styles.main}>
+		<div className={`${styles.main} ${darkModeClass}`}>
+			<div className={styles.toggle_theme}>
+				<TogglerTheme />
+			</div>
 
-			<div ref={aContainer} className={`${styles.container} ${styles.a_container}`} id="a_container">
+			<div ref={aContainer} className={`${styles.container} ${styles.a_container} ${darkModeClass}`} id="a_container">
 				<div className={styles.container_inner}>
 					<SignUpPage switchform={switchForm} />
 				</div>
 			</div>
 
-			<div ref={bContainer} className={`${styles.container} ${styles.b_container}`} id="b_container">
+			<div ref={bContainer} className={`${styles.container} ${styles.b_container} ${darkModeClass}`} id="b_container">
 				<div className={styles.container_inner}>
 					<SignInPage />
 				</div>
 			</div>
 
-			<div ref={switchCtn} className={styles.switch} id="switch-cnt">
-				<div ref={switchCircle1} className={styles.switch__circle}></div>
-				<div ref={switchCircle2} className={`${styles.switch__circle} ${styles.switch__circle__t}`}></div>
+			<div ref={switchCtn} className={`${styles.switch} ${darkModeClass}`} id="switch-cnt">
+				<div ref={switchCircle1} className={`${styles.switch__circle} ${darkModeClass}`}></div>
+				<div ref={switchCircle2} className={`${styles.switch__circle} ${styles.switch__circle__t} ${darkModeClass}`}></div>
 
 				<div ref={switchC1} className={styles.switch__container} id="switch-c1">
 					{!isMedia800 && (
 						<>
-							<h2 className={`${styles.switch__title} ${styles.title}`}>Welcome Back !</h2>
-							<p className={`${styles.switch__description} ${styles.description}`}>To keep connected with us please login with your personal info</p>
+							<h2 className={`${styles.switch__title} ${styles.title} ${darkModeClass}`}>Welcome Back !</h2>
+							<p className={`${styles.switch__description} ${styles.description} ${darkModeClass}`}>To keep connected with us please login with your personal info</p>
 						</>
 					)}
-					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn}`}>SIGN IN</button>
+					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn} ${darkModeClass}`}>SIGN IN</button>
 				</div>
 
 				<div ref={switchC2} className={`${styles.switch__container} ${styles.is_hidden}`} id="switch-c2">
 					{!isMedia800 && (
 						<>
-							<h2 className={`${styles.switch__title} ${styles.title}`}>Hello Friend !</h2>
-							<p className={`${styles.switch__description} ${styles.description}`}>Enter your personal details and start journey with us</p>
+							<h2 className={`${styles.switch__title} ${styles.title} ${darkModeClass}`}>Hello Friend !</h2>
+							<p className={`${styles.switch__description} ${styles.description} ${darkModeClass}`}>Enter your personal details and start journey with us</p>
 						</>
 					)}
-					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn}`}>SIGN UP</button>
+					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn} ${darkModeClass}`}>SIGN UP</button>
 				</div>
 
 			</div>
