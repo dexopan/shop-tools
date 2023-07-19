@@ -6,7 +6,7 @@ const EmailInput = ({ register, error }: IAuthProps) => {
 	return (
 		<label className={styles.form__label} htmlFor="">
 			<input {...register('email', {
-				required: 'email is required',
+				required: 'Email is required',
 				pattern: {
 					value: /\S+@\S+\.\S+/,
 					message: 'Email is invalid'
