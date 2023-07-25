@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import ReduxProvider from '@/store/provider'
+import { ToastContainer } from 'react-toastify'
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css'
+import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme'
 
 export const metadata: Metadata = {
 	title: 'Tools Store',
@@ -13,6 +16,15 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
 			<body>
 				<ReduxProvider>
 					{children}
+					<TogglerTheme />
+					<ToastContainer
+						position="bottom-right"
+						hideProgressBar={false}
+						closeOnClick
+						rtl={false}
+						limit={1}
+						theme="light"
+					/>
 				</ReduxProvider>
 			</body>
 		</html>

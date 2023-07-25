@@ -1,3 +1,5 @@
+'use client'
+
 import { useAppDispatch, useAppSelector } from "@/store";
 import { toggleTheme } from "@/store/themeSlice";
 import styles from '@/styles/auth/index.module.scss';

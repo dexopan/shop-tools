@@ -3,10 +3,7 @@ import { useRef } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import SignUpPage from '@/components/modules/authPage/SignUpPage';
 import SignInPage from '@/components/modules/authPage/SignInPage';
-import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
 import { useAppSelector } from '@/store';
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import styles from '@/styles/auth/index.module.scss';
 
 
@@ -38,7 +35,6 @@ export default function Auth() {
 
 	return (
 		<div className={`${styles.main} ${darkModeClass}`}>
-			<TogglerTheme />
 
 			<div ref={aContainer} className={`${styles.container} ${styles.a_container} ${darkModeClass}`} id="a_container">
 				<div className={styles.container_inner}>
@@ -77,14 +73,6 @@ export default function Auth() {
 				</div>
 
 			</div>
-			<ToastContainer
-				position="bottom-right"
-				hideProgressBar={false}
-				closeOnClick
-				rtl={false}
-				limit={1}
-				theme="light"
-			/>
 		</div>
 	)
 }

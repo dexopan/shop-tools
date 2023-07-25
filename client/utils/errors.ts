@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
 import { HTTPStatus } from '@/constants/index'
 
 
