@@ -1,6 +1,8 @@
-import CityButton from '@/components/elements/cityButton/CityButton'
-import styles from '@/styles/header/index.module.scss'
 import Link from 'next/link'
+import CityButton from '@/components/elements/cityButton/CityButton'
+import ProfileDropdown from './ProfileDropdown'
+import styles from '@/styles/header/index.module.scss'
+import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme'
 
 const HeaderTop = () => {
 	return (
@@ -44,8 +46,12 @@ const HeaderTop = () => {
 								</a>
 							</Link>
 						</li>
+						<li className={styles.header__nav__list__item}>
+							<TogglerTheme />
+						</li>
 					</ul>
 				</nav>
+				<ProfileDropdown />
 			</div>
 		</header>
 	)

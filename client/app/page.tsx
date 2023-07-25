@@ -1,7 +1,7 @@
 'use client';
 import Header from '@/components/modules/Header/Header';
-import './globals.css'
 import { useAppSelector } from '@/store';
+import './globals.css'
 import styles from '@/styles/auth/index.module.scss';
 
 

@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import SignUpPage from '@/components/modules/authPage/SignUpPage';
 import SignInPage from '@/components/modules/authPage/SignInPage';
+import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme'
 import { useAppSelector } from '@/store';
 import styles from '@/styles/auth/index.module.scss';
 
@@ -71,8 +72,8 @@ export default function Auth() {
 					)}
 					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn} ${darkModeClass}`}>SIGN UP</button>
 				</div>
-
 			</div>
+			<TogglerTheme />
 		</div>
 	)
 }
