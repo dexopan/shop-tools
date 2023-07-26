@@ -46,9 +46,6 @@ const HeaderTop = () => {
 								</a>
 							</Link>
 						</li>
-						<li className={styles.header__nav__list__item}>
-							<TogglerTheme />
-						</li>
 					</ul>
 				</nav>
 				<ProfileDropdown />
