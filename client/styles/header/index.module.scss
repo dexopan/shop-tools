@@ -136,7 +136,11 @@
 	  padding-top: 17px;
 	  padding-bottom: 14px;
 	  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
- 
+
+	  &.dark_mode {
+		background-color: #2d2d2d;
+	  }
+	  
 	  &__container {
 		 display: grid;
 		 grid-template-columns: repeat(12, 1fr);

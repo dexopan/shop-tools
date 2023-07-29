@@ -11,9 +11,9 @@ export default function Main() {
 	return (
 		<>
 			<Header />
-			{/* <div className={`${styles.main} ${darkModeClass}`}>
+			<div className={`${styles.main} ${darkModeClass}`}>
 				Main
-			</div> */}
+			</div>
 		</>
 	)
 }

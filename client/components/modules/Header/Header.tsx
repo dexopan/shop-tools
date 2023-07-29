@@ -5,7 +5,7 @@ import styles from '@/styles/header/index.module.scss'
 
 const Header = () => {
 	return (
-		<header className={styles.header}>
+		<header className={`${styles.header}`}>
 			<HeaderTop />
 			<HeaderBottom />
 		</header>

@@ -1,16 +1,18 @@
+'use client';
+import Link from 'next/link';
 import SearchInput from '@/components/elements/Header/SearchInput';
 import SearchSvg from '@/components/elements/searchSvg/SearchSvg';
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
+import CartPopup from './CartPopup/CartPopup';
 import { useAppSelector } from '@/store';
 import styles from '@/styles/header/index.module.scss'
-import Link from 'next/link';
 
 const HeaderBottom = () => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	return (
-		<div className={styles.header__bottom}>
-			<div className={`container ${styles.header__bottom__container}`}>
+		<div className={`${styles.header__bottom} ${darkModeClass}`} >
+			<div className={`container ${styles.header__bottom__container} `}>
 				<h1 className={styles.header__logo}>
 					<Link href='/' legacyBehavior passHref>
 						<a className={styles.header__logo__link}>
@@ -21,13 +23,13 @@ const HeaderBottom = () => {
 				</h1>
 				<div className={styles.header__search}>
 					<SearchInput />
-					<button>
-						<span className={styles.header__search__btn}> <SearchSvg /> </span>
+					<button className={`${styles.header__search__btn} ${darkModeClass}`} >
+						<span className={styles.header__search__btn__span}> <SearchSvg /> </span>
 					</button>
 				</div>
-				<div className=''>
+				<div className={styles.header__shopping_cart}>
 					<TogglerTheme />
-					<button className={styles.header__shopping_cart}>Basket</button>
+					<CartPopup />
 				</div>
 			</div >
 		</div >

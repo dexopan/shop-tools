@@ -12,7 +12,6 @@ export default function TogglerTheme() {
 
 	const handler = () => {
 		dispatch(toggleTheme())
-		document.body.classList.toggle('dark_mode')
 	}
 
 	return (
