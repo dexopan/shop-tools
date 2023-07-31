@@ -84,12 +84,12 @@
  
 	  &__title {
 		 margin: 0;
-		 color: #4E4C4C;;
+		 color: #4E4C4C;
 		 font-size: 24px;
 		 font-weight: 400;
 		 padding-left: 60px;
 		 line-height: 44px;
-		 background-image: url('/img/cart.png');
+		 background-image: url('/img/cart.svg');
 		 background-repeat: no-repeat;
 		 background-position: left center;
 		 background-size: 40px;
@@ -97,7 +97,7 @@
 
 		 &.dark_mode {
 			color: #f2f2f2;
-			background-image: url('/img/darkCart.png');
+			background-image: url('/img/darkCart.svg');
 		 }
 	  }
  
