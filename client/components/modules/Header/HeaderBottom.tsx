@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
 import SearchInput from '@/components/elements/Header/SearchInput';
-import SearchSvg from '@/components/elements/searchSvg/SearchSvg';
+import SearchSvg from '@/components/elements/svg/SearchSvg';
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import CartPopup from './CartPopup/CartPopup';
+import CartPopup from './CartPopup';
 import { useAppSelector } from '@/store';
 import styles from '@/styles/header/index.module.scss'
 

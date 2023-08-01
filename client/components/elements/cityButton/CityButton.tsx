@@ -1,6 +1,6 @@
-import LocationSvg from "@/components/locationSvg/LocationSvg"
-import styles from '@/styles/cityButton/index.module.scss'
 import { useAppSelector } from '@/store';
+import LocationSvg from "@/components/elements/svg/LocationSvg"
+import styles from '@/styles/cityButton/index.module.scss'
 
 const CityButton = () => {
 	const theme = useAppSelector(state => state.theme.theme)

@@ -3,7 +3,7 @@ import { forwardRef } from "react"
 import Link from "next/link";
 import { useAppSelector } from '@/store';
 import { AnimatePresence, motion } from "framer-motion"
-import ShoppingCartSvg from "@/components/elements/shoppingCartSvg/shoppingCartSvg";
+import ShoppingCartSvg from "@/components/elements/svg/shoppingCartSvg";
 import { withClickOutside } from "@/utils/withClickOutside";
 import { IWrapperComponentProps } from "@/types/common"
 import styles from "@/styles/cartPopup/index.module.scss"
