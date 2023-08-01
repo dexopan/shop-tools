@@ -73,7 +73,9 @@ export default function Auth() {
 					<button onClick={switchForm} className={`${styles.button} ${styles.switch__button} ${styles.switch_btn} ${darkModeClass}`}>SIGN UP</button>
 				</div>
 			</div>
-			<TogglerTheme />
+			<div className={styles.toggle_theme}>
+				<TogglerTheme />
+			</div>
 		</div>
 	)
 }

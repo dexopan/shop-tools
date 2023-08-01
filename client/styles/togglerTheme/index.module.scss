@@ -1,6 +1,16 @@
 .theme {
 	display: flex;
 	justify-content: flex-end;
+
+	@media (max-width: 950px) {
+		position: absolute;
+		top: 12px;
+    	right: 20px;
+	 }
+  
+	 @media (max-width: 580px) {
+		top: 16px;
+	 }
  
 	&__input {
 	  appearance: none;

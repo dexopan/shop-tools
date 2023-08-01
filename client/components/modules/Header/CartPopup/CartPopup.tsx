@@ -10,8 +10,8 @@ import styles from "@/styles/cartPopup/index.module.scss"
 
 const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, setOpen }, ref) => {
 	const theme = useAppSelector(state => state.theme.theme)
-	const cart = useAppSelector(state => state.cart.cart)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
+	const cart = useAppSelector(state => state.cart.cart)
 	const toggleCartDropdown = () => {
 		setOpen(!open)
 	}
@@ -19,6 +19,7 @@ const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, se
 	return (
 		<div className={styles.cart} ref={ref}>
 			<button className={`${styles.cart__btn} ${darkModeClass}`} onClick={toggleCartDropdown}>
+				{!!cart.length && <span className={styles.cart__btn__count}>{cart.length}</span>}
 				<span className={styles.cart__svg}>
 					<ShoppingCartSvg />
 				</span>

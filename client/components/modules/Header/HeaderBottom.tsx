@@ -3,11 +3,13 @@ import Link from 'next/link';
 import SearchInput from '@/components/elements/Header/SearchInput';
 import SearchSvg from '@/components/elements/searchSvg/SearchSvg';
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CartPopup from './CartPopup/CartPopup';
 import { useAppSelector } from '@/store';
 import styles from '@/styles/header/index.module.scss'
 
 const HeaderBottom = () => {
+	const isMedia950 = useMediaQuery(950)
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	return (
@@ -28,7 +30,7 @@ const HeaderBottom = () => {
 					</button>
 				</div>
 				<div className={styles.header__shopping_cart}>
-					<TogglerTheme />
+					{!isMedia950 && <TogglerTheme />}
 					<CartPopup />
 				</div>
 			</div >
