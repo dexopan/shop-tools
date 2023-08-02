@@ -13,7 +13,7 @@ const Footer = () => {
 			<div className={styles.footer__container}>
 				<div className={styles.footer__top}>
 					<FooterLogo />
-					<div className={styles.footer__inner}>
+					<div className={styles.footer__top__inner}>
 						<div className={styles.footer__top__item}>
 							<h3 className={styles.footer__top__item__title}>Online Store</h3>
 							<OnlineStoreContent />
@@ -22,37 +22,69 @@ const Footer = () => {
 							<h3 className={styles.footer__top__item__title}>Company</h3>
 							<CompanyContent />
 						</div>
-						<div className={styles.footer__top__item}>
-							<h3 className={styles.footer__top__item__title}>Contacts</h3>
-							<ul className={`${styles.footer__top__item__list} ${styles.footer__top__item__contacts}`}>
-								<li className={styles.footer__top__item__list__item}>
-									<Link href="/contacts" passHref legacyBehavior>
-										<a className={styles.footer__top__item__list__item__link}>
-											<span>Address:</span>
-											<span>Moscow, str. Pushkina, 42 </span>
-											<span><MarkerSvg /></span>
-										</a>
-									</Link>
-								</li>
-								<li className={styles.footer__top__item__list__item}>
-									<a href='tel:+71234567890' className={styles.footer__top__item__list__item__link}>
-										<span>Contact number:</span>
-										<span>+7(123)456-78-90</span>
-										<span><PhoneSvg /></span>
+					</div>
+					<div className={styles.footer__top__item}>
+						<h3 className={styles.footer__top__item__title}>Contacts</h3>
+						<ul className={`${styles.footer__top__item__list} ${styles.footer__top__item__contacts}`}>
+							<li className={styles.footer__top__item__list__item}>
+								<Link href="/contacts" passHref legacyBehavior>
+									<a className={styles.footer__top__item__list__item__link}>
+										<span>Address:</span>
+										<span>Moscow, str. Pushkina, 42 </span>
+										<span><MarkerSvg /></span>
 									</a>
+								</Link>
+							</li>
+							<li className={styles.footer__top__item__list__item}>
+								<a href='tel:+71234567890' className={styles.footer__top__item__list__item__link}>
+									<span>Contact number:</span>
+									<span>+7(123)456-78-90</span>
+									<span><PhoneSvg /></span>
+								</a>
+							</li>
+							<li className={styles.footer__top__item__list__item}>
+								<a href='mailto:info@tools.com' className={styles.footer__top__item__list__item__link}>
+									<span>Email:</span>
+									<span>info@tools.com</span>
+									<span><MailSvg /></span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div className={styles.footer__bottom}>
+					<div className={styles.footer__bottom__block}>
+						<div className={styles.footer__bottom__block__left}>
+							<h3 className={styles.footer__bottom__block__title}>We accept payment:</h3>
+							<ul className={styles.footer__bottom__block__pay}>
+								<li className={styles.footer__bottom__block__pay__item}><img src="/img/pay.png" alt="apple-pay" /></li>
+								<li className={styles.footer__bottom__block__pay__item}><img src="/img/gpay.png" alt="google-pay" /></li>
+								<li className={styles.footer__bottom__block__pay__item}><img src="/img/master-card.png" alt="master-card" /></li>
+								<li className={styles.footer__bottom__block__pay__item}><img src="/img/visa.png" alt="visa" /></li>
+							</ul>
+						</div>
+						<div className={styles.footer__bottom__block__right}>
+							<h3 className={styles.footer__bottom__block__title}>Our networks:</h3>
+							<ul className={styles.footer__bottom__block__social}>
+								<li className={styles.footer__bottom__block__social__item}>
+									<a href="#" className={styles.footer__bottom__block__social__item_vk} />
 								</li>
-								<li className={styles.footer__top__item__list__item}>
-									<a href='mailto:info@tools.com' className={styles.footer__top__item__list__item__link}>
-										<span>Email:</span>
-										<span>info@tools.com</span>
-										<span><MailSvg /></span>
-									</a>
+								<li className={styles.footer__bottom__block__social__item}>
+									<a href="#" className={styles.footer__bottom__block__social__item_fb} />
+								</li>
+								<li className={styles.footer__bottom__block__social__item}>
+									<a href="#" className={styles.footer__bottom__block__social__item_inst} />
+								</li>
+								<li className={styles.footer__bottom__block__social__item}>
+									<a href="#" className={styles.footer__bottom__block__social__item_ytb} />
 								</li>
 							</ul>
 						</div>
 					</div>
+					<div className={styles.footer__bottom__block}>
+						<p className={styles.footer__bottom__block__copyright}>© «Tools Store» 2023.</p>
+					</div>
 				</div>
-				<div className={styles.footer__bottom}></div>
 			</div>
 		</footer >
 	)
