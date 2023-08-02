@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useAppSelector } from '@/store'
-import CityButton from '@/components/elements/cityButton/CityButton'
+import CityButton from '@/components/elements/header/CityButton'
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { usePopup } from '@/hooks/usePopup'

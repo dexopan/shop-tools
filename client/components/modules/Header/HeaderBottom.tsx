@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import SearchInput from '@/components/elements/Header/SearchInput';
+import SearchInput from '@/components/elements/header/SearchInput';
 import SearchSvg from '@/components/elements/svg/SearchSvg';
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
@@ -16,7 +16,7 @@ const HeaderBottom = () => {
 		<div className={`${styles.header__bottom} ${darkModeClass}`} >
 			<div className={`container ${styles.header__bottom__container} `}>
 				<h1 className={styles.header__logo}>
-					<Link href='/' legacyBehavior passHref>
+					<Link href='/main' legacyBehavior passHref>
 						<a className={styles.header__logo__link}>
 							<img src="/img/logo.png" alt="logo" style={{ width: 30, height: 30 }} />
 							<span className={`${styles.header__logo__link__text} ${darkModeClass}`}>Tools Store</span>

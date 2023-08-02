@@ -31,7 +31,7 @@ const SignInPage = () => {
 			if (userData) {
 				resetField('username');
 				resetField('password');
-				route.push('/');
+				route.push('/main');
 
 			}
 		} catch (error: any) {

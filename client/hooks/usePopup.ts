@@ -14,7 +14,6 @@ export const usePopup = () => {
 
 	const closePopup = () => {
 		document.querySelector('.overlay')?.classList.remove('open')
-		document.body.classList.remove('body')
 		document.querySelector('.body')?.classList.remove('overflow-hidden')
 		setOpen(false)
 	}
