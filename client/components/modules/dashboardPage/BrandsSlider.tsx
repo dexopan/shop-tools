@@ -51,7 +51,7 @@ const BrandsSlider = () => {
 			{brandItems.map((item) => (
 				<div
 					key={item.id}
-					className={styles.dashboard__brands__slide}
+					className={`${styles.dashboard__brands__slide} ${darkModeClass}`}
 					style={{ width: isMedia800 ? 124 : 180 }}>
 					<img src={item.img} alt={item.alt} />
 				</div>

@@ -1,15 +1,14 @@
 'use client';
 
 import DashboardPage from "@/components/modules/dashboardPage/DashboardPage";
-
+import { useAppSelector } from '@/store'
 export default function Main() {
-
+	const theme = useAppSelector(state => state.theme.theme)
+	const darkModeClass = theme === 'dark' ? 'dark_mode' : '';
 	return (
 		<>
-			<main>
+			<main className={darkModeClass}>
 				<DashboardPage />
-				<h1 style={{ height: '500px' }}>Main</h1>
-
 				<div className='overlay'></div>
 			</main>
 		</>

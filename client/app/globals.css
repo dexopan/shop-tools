@@ -109,3 +109,7 @@
  .slick-track {
 	padding-top: 8px;
  }
+
+ main.dark_mode {
+	background-color: #222;
+ }
