@@ -60,8 +60,8 @@ const DashboardSlider = ({ items, spinner, goToPartPage }: IDashboardSlider) => 
 		<Slider {...settings} className={styles.dashboard__slider}  >
 			{spinner
 				? (
-					[...Array(8)].map((item) => (
-						<div key={item} className={`${skeletonStyles.skeleton__item} ${theme === 'dark' ? `${skeletonStyles.dark_mode}` : ''}`} style={width}>
+					[...Array(8)].map((_, index) => (
+						<div key={index} className={`${skeletonStyles.skeleton__item} ${theme === 'dark' ? `${skeletonStyles.dark_mode}` : ''}`} style={width}>
 							<div className={skeletonStyles.skeleton__item__light} />
 						</div>
 					)))

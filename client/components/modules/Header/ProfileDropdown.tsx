@@ -12,10 +12,11 @@ const ProfileDropDown = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ op
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 
+	const user = useAppSelector(state => state.user.user)
+
 	const toggleProfileDropdown = () => {
 		setOpen(!open)
 	}
-
 
 	return (
 		<div className={styles.profile} ref={ref}>
@@ -33,8 +34,8 @@ const ProfileDropDown = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ op
 						className={`${styles.profile__dropdown} ${darkModeClass}`}
 						style={{ transformOrigin: 'right-top' }}>
 						<li className={`${styles.profile__dropdown__user} ${darkModeClass}`}>
-							<span className={`${styles.profile__dropdown__username} ${darkModeClass}`}>Name</span>
-							<span className={`${styles.profile__dropdown__email} ${darkModeClass}`}>Email</span></li>
+							<span className={`${styles.profile__dropdown__username} ${darkModeClass}`}>{user.username}</span>
+							<span className={`${styles.profile__dropdown__email} ${darkModeClass}`}>{user.email}</span></li>
 						<li className={styles.profile__dropdown__item}>
 							<button className={styles.profile__dropdown__item__btn}>
 								<span className={`${styles.profile__dropdown__item__text}  ${darkModeClass}`}>Log out</span>

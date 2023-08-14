@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { $host } from '@/http/axiosClient'
+import { $authHost, $host } from '@/http/axiosClient'
 import { showAuthError } from '@/utils/errors';
 import { ISingIn, ISingUp } from "@/types/auth";
 
@@ -21,10 +21,20 @@ export const signIn = async ({ url, username, password }: ISingIn) => {
 		toast.success('Logged in successfully')
 		localStorage.setItem('token', data.result.token);
 		localStorage.setItem('username', data.result.username);
+		localStorage.setItem('email', data.result.email);
 		return data
 	} catch (error: any) {
 		showAuthError(error.response)
 
+	}
+}
+
+export const checkAuth = async () => {
+	try {
+		const { data } = await $authHost.get('api/user/checkAuth')
+		return data
+	} catch (error: any) {
+		showAuthError(error.response)
 	}
 }
 
