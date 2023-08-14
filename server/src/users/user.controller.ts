@@ -76,8 +76,10 @@ export class UserController {
 				const result = {
 					id: user.id,
 					username: user.username,
+					email: user.email,
 					token
 				};
+
 				return res.status(200).json({ message: "User logged in successfully", result });
 			}
 		} catch (error) {
@@ -86,8 +88,24 @@ export class UserController {
 	}
 
 	async checkAuth(req: Request, res: Response): Promise<Response> {
-		const token = generateJwt(req.body.id, req.body.username)
-		return res.json({ message: 'User authorized', token })
+		try {
+			const token = req.headers.authorization?.split(' ')[1]
+			if (!token) return res.status(401).json({ message: 'Unauthorized' })
+			const decoded = jwt.verify(token, process.env.SECRET_KEY)
+			const user = await prisma.user.findUnique({
+				where: {
+					username: (decoded as any).username,
+				},
+			});
+			const result = {
+				id: user.id,
+				username: user.username,
+				email: user.email,
+			};
+			return res.status(200).json({ message: 'Authorized', result })
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
 	}
 
 
