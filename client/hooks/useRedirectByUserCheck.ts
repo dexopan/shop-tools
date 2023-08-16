@@ -20,21 +20,24 @@ const useRedirectByUserCheck = (isAuthPage = false) => {
 
 	const checkUser = async () => {
 		const data = await checkAuth()
-
 		if (isAuthPage) {
-			if (data) router.push('/main')
-			else setShouldLoadContent(true)
+			if (data) {
+				router.push('/main')
+				return
+			}
+			setShouldLoadContent(true)
+			return
 		}
 		else {
 			if (data) {
 				const user = data.result
 				dispatch(setUser(user))
 				setShouldLoadContent(true)
+				return
 			}
-			else router.push('/auth')
+			router.push('/auth')
 		}
 	}
-
 	return { shouldLoadContent }
 }
 

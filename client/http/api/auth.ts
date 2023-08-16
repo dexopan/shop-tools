@@ -34,6 +34,19 @@ export const checkAuth = async () => {
 		const { data } = await $authHost.get('api/user/checkAuth')
 		return data
 	} catch (error: any) {
+		return
+	}
+}
+
+export const logout = async () => {
+	try {
+		const { data } = await $authHost.get('api/user/logout')
+		localStorage.removeItem('token');
+		localStorage.removeItem('username');
+		localStorage.removeItem('email');
+		toast.success('Logged out successfully')
+		return data
+	} catch (error: any) {
 		showAuthError(error.response)
 	}
 }

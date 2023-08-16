@@ -1,9 +1,11 @@
 'use client';
 import { forwardRef } from "react"
 import { useAppSelector } from '@/store';
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion"
 import ProfileSvg from "@/components/elements/svg/ProfileSvg"
 import LogoutSvg from "@/components/elements/svg/LogOutSvg"
+import { logout } from "@/http/api/auth";
 import { withClickOutside } from "@/utils/withClickOutside";
 import { IWrapperComponentProps } from "@/types/common"
 import styles from "@/styles/profile/index.module.scss"
@@ -12,12 +14,17 @@ const ProfileDropDown = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ op
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 
+	const router = useRouter()
 	const user = useAppSelector(state => state.user.user)
 
 	const toggleProfileDropdown = () => {
 		setOpen(!open)
 	}
 
+	const handleLogout = async () => {
+		await logout()
+		router.push('/auth')
+	}
 	return (
 		<div className={styles.profile} ref={ref}>
 			<button className={styles.profile__btn} onClick={toggleProfileDropdown}>
@@ -37,7 +44,7 @@ const ProfileDropDown = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ op
 							<span className={`${styles.profile__dropdown__username} ${darkModeClass}`}>{user.username}</span>
 							<span className={`${styles.profile__dropdown__email} ${darkModeClass}`}>{user.email}</span></li>
 						<li className={styles.profile__dropdown__item}>
-							<button className={styles.profile__dropdown__item__btn}>
+							<button className={styles.profile__dropdown__item__btn} onClick={handleLogout}>
 								<span className={`${styles.profile__dropdown__item__text}  ${darkModeClass}`}>Log out</span>
 								<span className={`${styles.profile__dropdown__item__svg}  ${darkModeClass}`}>
 									<LogoutSvg />
