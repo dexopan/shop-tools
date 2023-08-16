@@ -5,18 +5,12 @@ import Slider from "react-slick";
 import { useAppSelector } from "@/store";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { formatPrice } from "@/utils/common";
-import { ITool } from "@/types/tool";
+import { IDashboardSlider } from "@/types/dashboard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from '@/styles/dashboard/index.module.scss'
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
 
-
-interface IDashboardSlider {
-	items: ITool[]
-	spinner: boolean
-	goToPartPage?: boolean
-}
 
 const DashboardSlider = ({ items, spinner, goToPartPage }: IDashboardSlider) => {
 	const theme = useAppSelector(state => state.theme.theme)

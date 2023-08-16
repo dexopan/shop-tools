@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react'
 import { useAppSelector } from '@/store';
 import BrandsSlider from './BrandsSlider'
 import DashboardSlider from './DashboardSlider';
+import CartAlert from './CartAlert';
 import { getBestsellersOrNewTools } from '@/http/api/tools';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ITool } from '@/types/tool';
 import styles from '@/styles/dashboard/index.module.scss'
 
@@ -13,6 +15,8 @@ const DashboardPage = () => {
 	const [bestsellers, setBestsellers] = useState<ITool[]>([])
 	const [newParts, setNewParts] = useState<ITool[]>([])
 	const [spinner, setSpinner] = useState<boolean>(false)
+	const shoppingCart = useAppSelector(state => state.cart.cart)
+	const [showAlert, setShowAlert] = useState<boolean>(!!shoppingCart.length)
 
 	useEffect(() => {
 		loadTools()
@@ -32,9 +36,24 @@ const DashboardPage = () => {
 		}
 	}
 
+	const closeAlert = () => {
+		setShowAlert(false)
+	}
+
 	return (
 		<section className={styles.dashboard}>
 			<div className={`container ${styles.dashboard__container}`}>
+				<AnimatePresence>
+					{showAlert && <motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						className={`${styles.dashboard__alert} ${darkModeClass}`}
+					>
+						<CartAlert closeAlert={closeAlert} count={shoppingCart.length} />
+					</motion.div>
+					}
+				</AnimatePresence>
 				<div className={styles.dashboard__brands}>
 					<BrandsSlider />
 				</div>
