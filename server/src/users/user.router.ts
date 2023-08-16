@@ -9,5 +9,6 @@ const userController = new UserController();
 router.post('/register', userController.createUser);
 router.post('/login', userController.login);
 router.get('/checkAuth', authMiddleware, userController.checkAuth);
+router.get('/logout', authMiddleware, userController.logout);
 
 export default router;

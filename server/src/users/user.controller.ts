@@ -90,19 +90,28 @@ export class UserController {
 	async checkAuth(req: Request, res: Response): Promise<Response> {
 		try {
 			const token = req.headers.authorization?.split(' ')[1]
-			if (!token) return res.status(401).json({ message: 'Unauthorized' })
-			const decoded = jwt.verify(token, process.env.SECRET_KEY)
-			const user = await prisma.user.findUnique({
-				where: {
-					username: (decoded as any).username,
-				},
-			});
-			const result = {
-				id: user.id,
-				username: user.username,
-				email: user.email,
-			};
-			return res.status(200).json({ message: 'Authorized', result })
+			if (token) {
+				const decoded = jwt.verify(token, process.env.SECRET_KEY)
+				const user = await prisma.user.findUnique({
+					where: {
+						username: (decoded as any).username,
+					},
+				});
+				const result = {
+					id: user.id,
+					username: user.username,
+					email: user.email,
+				};
+				return res.status(200).json({ message: 'Authorized', result })
+			}
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	}
+
+	async logout(req: Request, res: Response): Promise<Response> {
+		try {
+			return res.status(200).json({ message: 'Logout successful' })
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
 		}
