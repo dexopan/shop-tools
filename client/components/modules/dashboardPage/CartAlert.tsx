@@ -26,13 +26,13 @@ const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
 			</div>
 			<div className={styles.dashboard__alert__right}>
 				<Link href="/order" legacyBehavior passHref>
-					<a className={styles.dashboard__alert__btn_cart}> Go to cart </a>
+					<a className={`${styles.dashboard__alert__btn_cart} ${darkModeClass}`}> Go to cart </a>
 				</Link>
 				<Link href="/order" legacyBehavior passHref>
-					<a className={styles.dashboard__alert__btn_order}> Place an order </a>
+					<a className={`${styles.dashboard__alert__btn_order} ${darkModeClass}`}> Place an order </a>
 				</Link>
 			</div>
-			<button className={styles.dashboard__alert__btn_close} onClick={closeAlert} />
+			<button className={`${styles.dashboard__alert__btn_close} ${darkModeClass}`} onClick={closeAlert} />
 		</>
 	)
 }

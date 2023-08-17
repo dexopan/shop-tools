@@ -16,7 +16,7 @@ const DashboardPage = () => {
 	const [newParts, setNewParts] = useState<ITool[]>([])
 	const [spinner, setSpinner] = useState<boolean>(false)
 	const shoppingCart = useAppSelector(state => state.cart.cart)
-	const [showAlert, setShowAlert] = useState<boolean>(!!shoppingCart.length)
+	const [showAlert, setShowAlert] = useState<boolean>(!!1)
 
 	useEffect(() => {
 		loadTools()

@@ -10,21 +10,21 @@
 	border-top-color: #fff;
 	animation: spin 1s ease-in-out infinite;
 	-webkit-animation: spin 1s ease-in-out infinite;
- 
+
 	&.dark_mode {
-	  border: 3px solid rgba(124, 119, 119, 0.3);
-	  border-top-color: black;
+		border: 3px solid rgba(124, 119, 119, 0.3);
+		border-top-color: black;
 	}
- }
- 
- @keyframes spin {
+}
+
+@keyframes spin {
 	to {
-	  -webkit-transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
 	}
- }
- 
- @-webkit-keyframes spin {
+}
+
+@-webkit-keyframes spin {
 	to {
-	  -webkit-transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
 	}
- }
+}
