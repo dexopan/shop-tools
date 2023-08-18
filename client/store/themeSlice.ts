@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 type InitialState = {
-	theme: string | null;
+	theme: string;
 };
 
 if (!global.localStorage?.getItem('theme')) {
