@@ -1,26 +1,38 @@
 'use client'
 import { useState } from 'react';
 import Select from 'react-select';
-import { useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { setToolsChepearFirst, setToolsExpensiveFirst, setToolsByPopularity } from '@/store/toolSlice';
 import { createSelectOption } from '@/utils/common';
-import { SelectOptionType } from '@/types/common';
+import { categoriesOption } from '@/utils/selectContent';
+import { ISelectOption, SelectOptionType } from '@/types/common';
 import { selectStyles, controlStyles, menuStyles } from '@/styles/catalog/select';
 import { optionStyles } from '@/styles/searchInput';
-import { categoriesOption } from '@/utils/selectContent';
 
 const FilterSelect = () => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const [categoryOption, setCategorOption] = useState<SelectOptionType>(null)
+	const dispatch = useAppDispatch()
 
-	const handleSearchOptionChange = (selectedOption: SelectOptionType) => {
+	const handleSortOptionChange = (selectedOption: SelectOptionType) => {
 		setCategorOption(selectedOption)
+		switch ((selectedOption as ISelectOption).value) {
+			case 'Сheap ones first':
+				dispatch(setToolsChepearFirst())
+				break;
+			case 'Expensive ones first':
+				dispatch(setToolsExpensiveFirst())
+				break;
+			case 'By popularity':
+				dispatch(setToolsByPopularity())
+				break;
+		}
 	}
-
 
 	return (
 		<Select
 			value={categoryOption || createSelectOption('Сheap ones first')}
-			onChange={handleSearchOptionChange}
+			onChange={handleSortOptionChange}
 			styles={{
 				...selectStyles,
 				control: (defState) => ({

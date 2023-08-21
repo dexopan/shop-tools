@@ -1,3 +1,3 @@
 import { createSelectOption } from "./common";
 
-export const categoriesOption = ['By popularity', 'Сheap ones first', 'Expensive ones first'].map(createSelectOption);
+export const categoriesOption = ['Сheap ones first', 'Expensive ones first', 'By popularity'].map(createSelectOption);
