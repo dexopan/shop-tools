@@ -7,6 +7,7 @@ const router = express.Router();
 const toolController = new ToolController();
 
 router.get('/', authMiddleware, toolController.paginateAndFilterTools);
+router.get('/all', toolController.getAllTools);
 router.get('/bestsellers', toolController.bestsellersTools);
 router.get('/new', toolController.newTools);
 router.get('/search/:id', toolController.findToolById);

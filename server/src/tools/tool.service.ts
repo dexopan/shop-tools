@@ -6,6 +6,10 @@ interface IQuery {
 	offset: number;
 }
 
+export async function getAllTools(): Promise<Tool[]> {
+	const tools = await prisma.tool.findMany();
+	return tools;
+}
 
 export async function paginateAndFilterTools(query: IQuery): Promise<Tool[]> {
 	const { limit, offset } = query
