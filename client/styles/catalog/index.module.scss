@@ -597,11 +597,10 @@
 				&:nth-last-child(2) {
 					border-right: none;
 				}
-
+		
 				&__link {
 					display: block;
-					background-color: #def0ff;
-					box-shadow: 0px 0px 30px rgba(28, 98, 158, 0.3);
+					background-color: #f2f2f2;
 					border-radius: 4px;
 					width: 36px;
 					height: 34px;
@@ -610,6 +609,11 @@
 					justify-content: center;
 					cursor: pointer;
 					color: #5e5e5e;
+					
+					&.dark_mode {
+						background-color: #5e5e5e;
+						color: #f2f2f2;
+					}
 				}
 			}
 
@@ -617,9 +621,14 @@
 				cursor: pointer;
 				margin: 0 8px;
 				padding: 0 8px;
-				height: 8px;
-				border-right: 1px solid #66b1f1;
-				border-left: 1px solid #66b1f1;
+				height: 12px;
+				border-right: 1px solid #5e5e5e;
+				border-left: 1px solid #5e5e5e;
+
+				&.dark_mode {
+					border-right: 1px solid #f2f2f2;
+					border-left: 1px solid #f2f2f2;
+				}
 
 				&__link {
 					display: block;
@@ -628,7 +637,7 @@
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					color: #2d2d2d;
+					color: #5e5e5e;
 
 					&.dark_mode {
 						color: #f2f2f2;

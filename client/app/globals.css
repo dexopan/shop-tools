@@ -113,3 +113,8 @@
  main.dark_mode {
 	background-color: #222;
  }
+
+ .selected a {
+	background-color: #ffcf62 !important;
+	color: #5e5e5e !important;
+ }

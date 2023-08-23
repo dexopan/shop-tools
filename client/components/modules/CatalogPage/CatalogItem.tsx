@@ -25,7 +25,7 @@ const CatalogItem = ({ item }: { item: ITool }) => {
 					<h3 className={styles.catalog__list__item__title}>{item.name}</h3>
 				</Link>
 				<span className={styles.catalog__list__item__code}>Vendor code: {item.vendorCode}</span>
-				<span className={styles.catalog__list__item__price}>{formatPrice(item.priceOne)}P</span>
+				<span className={styles.catalog__list__item__price}>{formatPrice(item.priceOne)} P</span>
 			</div>
 			<button
 				className={`${styles.catalog__list__item__cart} ${isInCart ? styles.added : ''}`}
@@ -33,7 +33,7 @@ const CatalogItem = ({ item }: { item: ITool }) => {
 				{spinner ?
 					<div className={spinnerStyles.spinner} style={{ top: 6, left: 6 }} />
 					:
-					<span>{true ? <CartHoverCheckedSvg /> : <CartHoverSvg />}</span>}
+					<span>{isInCart ? <CartHoverCheckedSvg /> : <CartHoverSvg />}</span>}
 			</button>
 
 		</li>

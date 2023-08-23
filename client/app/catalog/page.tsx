@@ -3,8 +3,9 @@
 import { useAppSelector } from '@/store'
 import CatalogPage from "@/components/modules/CatalogPage/CatalogPage";
 import useRedirectByUserCheck from "@/hooks/useRedirectByUserCheck";
+import { IQueryParams } from '@/types/catalog';
 
-export default function Catalog() {
+export default function Catalog({ query }: { query: IQueryParams }) {
 	const { shouldLoadContent } = useRedirectByUserCheck();
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? 'dark_mode' : '';
@@ -19,3 +20,11 @@ export default function Catalog() {
 		</>
 	)
 }
+
+// export async function getServerSideProps(context: { query: IQueryParams }) {
+// 	return {
+// 		props: {
+// 			query: { ...context.query }
+// 		}
+// 	}
+// }
