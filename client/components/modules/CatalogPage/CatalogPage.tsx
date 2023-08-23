@@ -9,7 +9,7 @@ import CatalogItem from './CatalogItem';
 import FilterSelect from './FilterSelect';
 import { toast } from 'react-toastify';
 import { getAllTools, getToolsWithLimit } from '@/http/api/tools';
-import { setAllTools, setToolWithLimit, setToolsByPopularity, setToolsChepearFirst, setToolsExpensiveFirst } from '@/store/toolSlice';
+import { setAllTools, setToolWithLimit } from '@/store/toolSlice';
 import styles from '@/styles/catalog/index.module.scss'
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
 
@@ -21,7 +21,7 @@ const CatalogPage = () => {
 	const allTools = useAppSelector(state => state.tools.allTools)
 	const limitTools = useAppSelector(state => state.tools.limitTools)
 	const [spinner, setSpinner] = useState(false)
-	const pagesCount = Math.ceil(allTools.length / 5)
+	const pagesCount = Math.ceil(allTools.length / 4)
 	const isValidOffset = localStorage.getItem('offset') && !isNaN(Number(localStorage.getItem('offset'))) && Number(localStorage.getItem('offset')) > 0
 	const [currentPage, setCurrentPage] = useState(isValidOffset ? Number(localStorage.getItem('offset')) - 1 : 0)
 
@@ -41,7 +41,7 @@ const CatalogPage = () => {
 		try {
 			setSpinner(true)
 			const allData = await getAllTools('/api/tool/all')
-			const limitData = await getToolsWithLimit('/api/tool?limit=4&offset=0')
+			const limitData = await getToolsWithLimit('/api/tool?limit=4&offset=0&sort=cheap')
 			dispatch(setAllTools(allData))
 			if (!isValidOffset) {
 				const offsetQuery = createQueryString('offset', '1')
@@ -70,7 +70,8 @@ const CatalogPage = () => {
 			}
 
 			const offset = Number(localStorage.getItem('offset')) - 1
-			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}`)
+			const sortFilter = localStorage.getItem('sort')
+			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=${sortFilter}`)
 			setCurrentPage(offset)
 			dispatch(setToolWithLimit(result))
 		} catch (error: any) {
@@ -85,7 +86,7 @@ const CatalogPage = () => {
 	}, [])
 
 	const handlePageChange = async ({ selected }: { selected: number }) => {
-		const limitData = await getToolsWithLimit('/api/tool?limit=4&offset=0')
+		const limitData = await getToolsWithLimit('/api/tool?limit=4&offset=0&sort=cheap')
 		if (selected > pagesCount) {
 			setCurrentPage(0)
 			dispatch(setToolWithLimit(limitData))
@@ -104,22 +105,9 @@ const CatalogPage = () => {
 
 		localStorage.setItem('offset', offset.toString())
 		setCurrentPage(selected)
-		const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${selected}`)
+		const sortFilter = localStorage.getItem('sort')
+		const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${selected}&sort=${sortFilter}`)
 		dispatch(setToolWithLimit(result))
-		switch (localStorage.getItem('sort')) {
-			case 'cheap':
-				dispatch(setToolsChepearFirst())
-				break;
-			case 'expensive':
-				dispatch(setToolsExpensiveFirst())
-				break;
-			case 'popular':
-				dispatch(setToolsByPopularity())
-				break;
-			default:
-				dispatch(setToolsChepearFirst())
-				break;
-		}
 	}
 
 	return (

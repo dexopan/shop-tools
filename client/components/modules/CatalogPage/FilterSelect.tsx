@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { setToolsChepearFirst, setToolsExpensiveFirst, setToolsByPopularity } from '@/store/toolSlice';
+import { setToolWithLimit } from '@/store/toolSlice';
+import { getToolsWithLimit } from '@/http/api/tools';
 import { createSelectOption } from '@/utils/common';
 import { categoriesOption } from '@/utils/selectContent';
 import { ISelectOption, SelectOptionType } from '@/types/common';
@@ -36,45 +37,49 @@ const FilterSelect = () => {
 	}
 
 	useEffect(() => {
-		if (limitTools.length) {
-			switch (localStorage.getItem('sort')) {
-				case 'cheap':
-					updateCategoryOption('Сheap ones first')
-					dispatch(setToolsChepearFirst())
-					break;
-				case 'expensive':
-					updateCategoryOption('Expensive ones first')
-					dispatch(setToolsExpensiveFirst())
-					break;
-				case 'popular':
-					updateCategoryOption('By popularity')
-					dispatch(setToolsByPopularity())
-					break;
-				default:
-					updateCategoryOption('Сheap ones first')
-					dispatch(setToolsChepearFirst())
-					break;
+		const fetchTools = async () => {
+			const offset = Number(localStorage.getItem('offset')) - 1
+			if (limitTools.length) {
+				switch (localStorage.getItem('sort')) {
+					case 'cheap':
+						const firstCheap = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=cheap`)
+						updateCategoryOption('Сheap ones first')
+						dispatch(setToolWithLimit(firstCheap))
+						break;
+					case 'expensive':
+						const firstExpensive = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=expensive`)
+						updateCategoryOption('Expensive ones first')
+						dispatch(setToolWithLimit(firstExpensive))
+						break;
+					case 'popular':
+						const firstPopular = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=popular`)
+						updateCategoryOption('By popularity')
+						dispatch(setToolWithLimit(firstPopular))
+						break;
+					default:
+						updateCategoryOption('Сheap ones first')
+						dispatch(setToolWithLimit(firstCheap))
+						break;
+				}
 			}
 		}
+		fetchTools()
 	}, [limitTools.length, localStorage.getItem('sort'), localStorage.getItem('offset')])
 
 	const updateCategoryOption = (value: string) => {
 		setCategorOption(createSelectOption(value))
 	}
 
-	const handleSortOptionChange = (selectedOption: SelectOptionType) => {
+	const handleSortOptionChange = async (selectedOption: SelectOptionType) => {
 		setCategorOption(selectedOption)
 		switch ((selectedOption as ISelectOption).value) {
 			case 'Сheap ones first':
-				dispatch(setToolsChepearFirst())
 				updateRoteParam('cheap')
 				break;
 			case 'Expensive ones first':
-				dispatch(setToolsExpensiveFirst())
 				updateRoteParam('expensive')
 				break;
 			case 'By popularity':
-				dispatch(setToolsByPopularity())
 				updateRoteParam('popular')
 				break;
 		}

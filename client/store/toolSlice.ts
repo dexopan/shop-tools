@@ -25,20 +25,11 @@ const toolSlice = createSlice({
 		setToolWithLimit(state, action) {
 			state.limitTools = action.payload;
 		},
-		setToolsChepearFirst(state) {
-			state.limitTools.sort((a, b) => a.priceOne - b.priceOne);
-		},
-		setToolsExpensiveFirst(state) {
-			state.limitTools.sort((a, b) => b.priceOne - a.priceOne);
-		},
-		setToolsByPopularity(state) {
-			state.limitTools.sort((a, b) => b.popularity - a.popularity);
-		}
 	}
 });
 
 
 
-export const { setAllTools, setToolWithLimit, setToolsChepearFirst, setToolsExpensiveFirst, setToolsByPopularity } = toolSlice.actions;
+export const { setAllTools, setToolWithLimit } = toolSlice.actions;
 
 export default toolSlice.reducer;
