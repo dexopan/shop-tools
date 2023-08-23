@@ -4,6 +4,7 @@ import prisma from '../utils/db.server'
 interface IQuery {
 	limit: number;
 	offset: number;
+	sort: string;
 }
 
 export async function getAllTools(): Promise<Tool[]> {
@@ -12,12 +13,49 @@ export async function getAllTools(): Promise<Tool[]> {
 }
 
 export async function paginateAndFilterTools(query: IQuery): Promise<Tool[]> {
-	const { limit, offset } = query
+	const { limit, offset, sort } = query
 	const offsetCalc = offset * limit
+	if (sort === 'cheap') {
+		const tools = await prisma.tool.findMany({
+			take: limit,
+			skip: offsetCalc,
+			orderBy: {
+				priceOne: 'asc'
+			}
+		},
+		)
+		return tools
+	}
+	if (sort === 'expensive') {
+		const tools = await prisma.tool.findMany({
+			take: limit,
+			skip: offsetCalc,
+			orderBy: {
+				priceOne: 'desc'
+			}
+		},
+		)
+		return tools
+	}
+	if (sort === 'popular') {
+		const tools = await prisma.tool.findMany({
+			take: limit,
+			skip: offsetCalc,
+			orderBy: {
+				popularity: 'desc'
+			}
+		},
+		)
+		return tools
+	}
 	const tools = await prisma.tool.findMany({
 		take: limit,
 		skip: offsetCalc,
-	})
+		orderBy: {
+			priceOne: 'asc'
+		}
+	},
+	)
 	return tools
 }
 
@@ -72,4 +110,3 @@ export async function searchByString(str: string): Promise<Tool[] | null> {
 	});
 	return tool;
 }
-

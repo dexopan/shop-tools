@@ -1,5 +1,9 @@
 import type { Request, Response } from 'express'
-import { getAllTools, paginateAndFilterTools, bestsellersTools, newTools, findToolById, findToolByName, searchByString } from './tool.service'
+import {
+	getAllTools, paginateAndFilterTools,
+	bestsellersTools, newTools,
+	findToolById, findToolByName, searchByString,
+} from './tool.service'
 
 
 export class ToolController {
@@ -15,8 +19,8 @@ export class ToolController {
 
 	async paginateAndFilterTools(req: Request, res: Response): Promise<Response> {
 		try {
-			const { limit, offset } = req.query
-			const tools = await paginateAndFilterTools({ limit: Number(limit), offset: Number(offset) })
+			const { limit, offset, sort } = req.query
+			const tools = await paginateAndFilterTools({ limit: Number(limit), offset: Number(offset), sort: String(sort) })
 			return res.status(200).json(tools)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
