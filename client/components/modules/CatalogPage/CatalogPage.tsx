@@ -16,18 +16,19 @@ import skeletonStyles from '@/styles/skeleton/index.module.scss'
 
 const CatalogPage = () => {
 	const dispatch = useAppDispatch()
+	const router = useRouter()
+	const pathname = usePathname()
+	const searchParams = useSearchParams()
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	const allTools = useAppSelector(state => state.tools.allTools)
 	const limitTools = useAppSelector(state => state.tools.limitTools)
 	const [spinner, setSpinner] = useState(false)
 	const pagesCount = Math.ceil(allTools.length / 4)
-	const isValidOffset = localStorage.getItem('offset') && !isNaN(Number(localStorage.getItem('offset'))) && Number(localStorage.getItem('offset')) > 0
+	const isValidOffset = searchParams.has('offset') && !isNaN(Number(searchParams.get('offset'))) && Number(searchParams.get('offset')) > 0
 	const [currentPage, setCurrentPage] = useState(isValidOffset ? Number(localStorage.getItem('offset')) - 1 : 0)
 
-	const router = useRouter()
-	const pathname = usePathname()
-	const searchParams = useSearchParams()
+
 	const createQueryString = useCallback(
 		(name: string, value: string) => {
 			const params = new URLSearchParams()
@@ -55,21 +56,20 @@ const CatalogPage = () => {
 			}
 
 			if (isValidOffset) {
-				if (Number(localStorage.getItem('offset')) > pagesCount) {
-					if (limitData.length === 0) {
-						const offsetQuery = createQueryString('offset', '1')
-						const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
-						router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
+				if (Number(searchParams.get('offset')) > Math.ceil(allData.length / 4)) {
+					const offsetQuery = createQueryString('offset', '1')
+					const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
+					router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
 
-						localStorage.setItem('offset', '1')
-						setCurrentPage(0)
-						dispatch(setToolWithLimit(limitData))
-						return
-					}
+					localStorage.setItem('offset', '1')
+					setCurrentPage(0)
+					dispatch(setToolWithLimit(limitData))
+					return
 				}
 			}
 
-			const offset = Number(localStorage.getItem('offset')) - 1
+			const offset = Number(searchParams.get('offset')) - 1
+			localStorage.setItem('offset', `${offset + 1}`)
 			const sortFilter = localStorage.getItem('sort')
 			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=${sortFilter}`)
 			setCurrentPage(offset)
