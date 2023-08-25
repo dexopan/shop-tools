@@ -7,6 +7,7 @@ import { AnimatePresence } from 'framer-motion';
 import ManufacturersBlock from './ManufacturersBlock';
 import CatalogItem from './CatalogItem';
 import FilterSelect from './FilterSelect';
+import CatalogFilters from './CatalogFilters';
 import { toast } from 'react-toastify';
 import { getAllTools, getToolsWithLimit } from '@/http/api/tools';
 import { setAllTools, setToolWithLimit } from '@/store/toolSlice';
@@ -128,7 +129,7 @@ const CatalogPage = () => {
 				</div>
 				<div className={`${styles.catalog__bottom} ${darkModeClass}`}>
 					<div className={styles.catalog__bottom__inner}>
-						<div>Filters</div>
+						<CatalogFilters />
 						{spinner ? (
 							<ul className={skeletonStyles.skeleton}>
 								{Array.from(Array(8).keys()).map((_, i) => (

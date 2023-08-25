@@ -39,10 +39,10 @@ const FilterSelect = () => {
 	useEffect(() => {
 		const fetchTools = async () => {
 			const offset = Number(localStorage.getItem('offset')) - 1
+			const firstCheap = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=cheap`)
 			if (limitTools.length) {
 				switch (localStorage.getItem('sort')) {
 					case 'cheap':
-						const firstCheap = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=cheap`)
 						updateCategoryOption('Сheap ones first')
 						dispatch(setToolWithLimit(firstCheap))
 						break;
