@@ -17,4 +17,6 @@ export interface IAccordionProps {
 	title?: string;
 	titleClass: string;
 	arrowOpenClass: string;
+	isMobileForFolters?: boolean;
+	hideArrowClass?: string;
 }
