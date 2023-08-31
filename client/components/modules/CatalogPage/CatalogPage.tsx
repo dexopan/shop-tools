@@ -29,6 +29,14 @@ const CatalogPage = () => {
 	const isValidOffset = searchParams.has('offset') && !isNaN(Number(searchParams.get('offset'))) && Number(searchParams.get('offset')) > 0
 	const [currentPage, setCurrentPage] = useState(isValidOffset ? Number(localStorage.getItem('offset')) - 1 : 0)
 
+	const manufacturers = useAppSelector(state => state.tools.manufacturers)
+	const typesTools = useAppSelector(state => state.tools.typesTools)
+
+	const [priceRange, setPriceRange] = useState([1000, 9000])
+	const [isPriceRangeChanged, setIsPriceRangeChanged] = useState(false)
+	const isAnyFilterSelected = manufacturers.some(item => item.checked) || typesTools.some(item => item.checked) || isPriceRangeChanged
+	const resetFilterBtnDisabled = !isAnyFilterSelected
+
 
 	const createQueryString = useCallback(
 		(name: string, value: string) => {
@@ -123,13 +131,13 @@ const CatalogPage = () => {
 						<ManufacturersBlock title='Types:' />
 					</AnimatePresence>
 					<div className={styles.catalog__top__inner}>
-						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={true}>Reset filters</button>
+						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={resetFilterBtnDisabled}>Reset filters</button>
 						<FilterSelect />
 					</div>
 				</div>
 				<div className={`${styles.catalog__bottom} ${darkModeClass}`}>
 					<div className={styles.catalog__bottom__inner}>
-						<CatalogFilters />
+						<CatalogFilters priceRange={priceRange} setPriceRange={setPriceRange} setIsPriceRangeChanged={setIsPriceRangeChanged} resetFilterBtnDisabled={resetFilterBtnDisabled} />
 						{spinner ? (
 							<ul className={skeletonStyles.skeleton}>
 								{Array.from(Array(8).keys()).map((_, i) => (

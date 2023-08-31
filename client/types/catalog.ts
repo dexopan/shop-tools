@@ -26,3 +26,24 @@ export interface IFilterManufacturerAccordionProps {
 	setManufacturers: ActionCreatorWithPayload<any, "tools/setManufacturers"> | ActionCreatorWithPayload<any, "tools/setTypesTools">;
 	updateManufacturers: ActionCreatorWithPayload<any, "tools/updateManufacturers"> | ActionCreatorWithPayload<any, "tools/updateTypesTools">;
 }
+
+export interface ICatalogFilterProps {
+	priceRange: number[];
+	setPriceRange: (arg0: number[]) => void;
+	setIsPriceRangeChanged: (arg0: boolean) => void;
+	resetFilterBtnDisabled: boolean;
+}
+
+export interface IPriceRangeProps {
+	priceRange: number[];
+	setPriceRange: (arg0: number[]) => void;
+	setIsPriceRangeChanged: (arg0: boolean) => void;
+}
+
+export interface ICatalogFilterDesktopProps {
+	priceRange: number[];
+	setPriceRange: (arg0: number[]) => void;
+	setIsPriceRangeChanged: (arg0: boolean) => void;
+	resetFilterBtnDisabled: boolean;
+	spinner: boolean;
+}
