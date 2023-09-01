@@ -1,26 +1,29 @@
 'use client'
 import { useAppSelector } from '@/store';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { IManufacturersBlockProps } from '@/types/catalog';
+import ManufacturersBlockItem from './ManufacturersBlockItem';
 import styles from '@/styles/catalog/index.module.scss'
 
-const ManufacturersBlock = ({ title }: IManufacturersBlockProps) => {
+const ManufacturersBlock = ({ title, manufacturersList, event }: IManufacturersBlockProps) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
+	const checkedItems = manufacturersList.filter(item => item.checked)
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
-			className={`${styles.catalog__alert} ${darkModeClass}`}>
+			className={`${styles.manufacturers} ${darkModeClass}`}>
 			<h3 className={`${styles.manufacturers__title} ${darkModeClass}`}>
 				{title}
 			</h3>
 			<ul className={styles.manufacturers__list}>
-				{[].map((item) => (
-					<li key={item}>
-					</li>
-				))}
+				<AnimatePresence>
+					{checkedItems.map((item) => (
+						<ManufacturersBlockItem key={item.id} item={item} event={event} />
+					))}
+				</AnimatePresence>
 			</ul>
 		</motion.div>
 	)

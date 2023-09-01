@@ -2,6 +2,13 @@ import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 export interface IManufacturersBlockProps {
 	title: string;
+	event: ActionCreatorWithPayload<any, "tools/updateManufacturers"> | ActionCreatorWithPayload<any, "tools/updateTypesTools">;
+	manufacturersList: IFilterCheckboxItem[];
+}
+
+export interface IManufacturersBlockItemProps {
+	item: IFilterCheckboxItem;
+	event: ActionCreatorWithPayload<any, "tools/updateManufacturers"> | ActionCreatorWithPayload<any, "tools/updateTypesTools">;
 }
 
 export interface IQueryParams {
@@ -32,6 +39,7 @@ export interface ICatalogFilterProps {
 	setPriceRange: (arg0: number[]) => void;
 	setIsPriceRangeChanged: (arg0: boolean) => void;
 	resetFilterBtnDisabled: boolean;
+	resetFilters: () => void;
 }
 
 export interface IPriceRangeProps {
@@ -46,4 +54,6 @@ export interface ICatalogFilterDesktopProps {
 	setIsPriceRangeChanged: (arg0: boolean) => void;
 	resetFilterBtnDisabled: boolean;
 	spinner: boolean;
+	resetFilters: () => void;
 }
+

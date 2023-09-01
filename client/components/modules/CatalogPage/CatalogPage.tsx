@@ -2,15 +2,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ReactPaginate from 'react-paginate';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { AnimatePresence } from 'framer-motion';
 import ManufacturersBlock from './ManufacturersBlock';
 import CatalogItem from './CatalogItem';
 import FilterSelect from './FilterSelect';
 import CatalogFilters from './CatalogFilters';
-import { toast } from 'react-toastify';
 import { getAllTools, getToolsWithLimit } from '@/http/api/tools';
-import { setAllTools, setToolWithLimit } from '@/store/toolSlice';
+import { setAllTools, setManufacturers, setToolWithLimit, setTypesTools, updateManufacturers, updateTypesTools } from '@/store/toolSlice';
 import styles from '@/styles/catalog/index.module.scss'
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
 
@@ -34,8 +34,10 @@ const CatalogPage = () => {
 
 	const [priceRange, setPriceRange] = useState([1000, 9000])
 	const [isPriceRangeChanged, setIsPriceRangeChanged] = useState(false)
-	const isAnyFilterSelected = manufacturers.some(item => item.checked) || typesTools.some(item => item.checked) || isPriceRangeChanged
-	const resetFilterBtnDisabled = !isAnyFilterSelected
+
+	const isAnyManufacturerChecked = manufacturers.some(item => item.checked)
+	const isAnyTypesChecked = typesTools.some(item => item.checked)
+	const resetFilterBtnDisabled = !(isAnyManufacturerChecked || isAnyTypesChecked || isPriceRangeChanged)
 
 
 	const createQueryString = useCallback(
@@ -119,25 +121,50 @@ const CatalogPage = () => {
 		dispatch(setToolWithLimit(result))
 	}
 
+	const resetFilters = () => {
+		const allManufactorers = manufacturers.map(item => {
+			return {
+				...item,
+				checked: false
+			}
+		})
+		const allTypes = typesTools.map(item => {
+			return {
+				...item,
+				checked: false
+			}
+		})
+		dispatch(setManufacturers(allManufactorers))
+		dispatch(setTypesTools(allTypes))
+		setPriceRange([1000, 9000])
+		setIsPriceRangeChanged(false)
+	}
+
+
 	return (
 		<section className={styles.catalog}>
 			<div className={`container ${styles.catalog__container}`}>
 				<h2 className={`${styles.catalog__title} ${darkModeClass}`}>Product catalog</h2>
 				<div className={`${styles.catalog__top} ${darkModeClass}`}>
 					<AnimatePresence>
-						<ManufacturersBlock title='Manufacturers:' />
+						{isAnyManufacturerChecked && <ManufacturersBlock title='Manufacturers:' manufacturersList={manufacturers} event={updateManufacturers} />}
 					</AnimatePresence>
 					<AnimatePresence>
-						<ManufacturersBlock title='Types:' />
+						{isAnyTypesChecked && <ManufacturersBlock title='Types:' manufacturersList={typesTools} event={updateTypesTools} />}
 					</AnimatePresence>
 					<div className={styles.catalog__top__inner}>
-						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={resetFilterBtnDisabled}>Reset filters</button>
+						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={resetFilterBtnDisabled} onClick={resetFilters}>Reset filters</button>
 						<FilterSelect />
 					</div>
 				</div>
 				<div className={`${styles.catalog__bottom} ${darkModeClass}`}>
 					<div className={styles.catalog__bottom__inner}>
-						<CatalogFilters priceRange={priceRange} setPriceRange={setPriceRange} setIsPriceRangeChanged={setIsPriceRangeChanged} resetFilterBtnDisabled={resetFilterBtnDisabled} />
+						<CatalogFilters
+							priceRange={priceRange}
+							setPriceRange={setPriceRange}
+							setIsPriceRangeChanged={setIsPriceRangeChanged}
+							resetFilterBtnDisabled={resetFilterBtnDisabled}
+							resetFilters={resetFilters} />
 						{spinner ? (
 							<ul className={skeletonStyles.skeleton}>
 								{Array.from(Array(8).keys()).map((_, i) => (

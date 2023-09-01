@@ -8,7 +8,7 @@ import { ICatalogFilterDesktopProps } from "@/types/catalog";
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import styles from '@/styles/catalog/index.module.scss'
 
-const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner }: ICatalogFilterDesktopProps) => {
+const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner, resetFilters }: ICatalogFilterDesktopProps) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	const manufacturers = useAppSelector(state => state.tools.manufacturers)
@@ -54,7 +54,7 @@ const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChang
 						style={{ top: 6, left: '47%' }}
 					/> : 'Show'}
 				</button>
-				<button className={styles.filters__actions__reset} disabled={resetFilterBtnDisabled}>
+				<button className={styles.filters__actions__reset} disabled={resetFilterBtnDisabled} onClick={resetFilters}>
 					Reset
 				</button>
 			</div>
