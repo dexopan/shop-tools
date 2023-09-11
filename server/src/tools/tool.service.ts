@@ -5,18 +5,95 @@ interface IQuery {
 	limit: number;
 	offset: number;
 	sort: string;
+	manufacturers: string | undefined;
+	typesTools: string | undefined;
+	priceFrom: string | undefined;
+	priceTo: string | undefined;
 }
 
-export async function getAllTools(): Promise<Tool[]> {
-	const tools = await prisma.tool.findMany();
-	return tools;
+interface IToolsFilter {
+	manufacturer?: { in: string; } | undefined;
+	type?: { in: any; } | undefined;
+	priceOne?: { gte: number; lte: number; } | undefined;
+}
+
+
+export async function getAllTools(query: Partial<IQuery>): Promise<Tool[]> {
+	const { sort, manufacturers, typesTools, priceFrom, priceTo } = query
+	const filter = {} as Partial<IToolsFilter>
+	if (priceFrom && priceTo) {
+		filter.priceOne = {
+			gte: Number(priceFrom) || 1000,
+			lte: Number(priceTo) || 9000
+		}
+	}
+	if (sort === 'cheap') {
+		const tools = await prisma.tool.findMany({
+			where: filter,
+			orderBy: {
+				priceOne: 'asc'
+			}
+		},
+		)
+		return tools
+	}
+	if (sort === 'expensive') {
+		const tools = await prisma.tool.findMany({
+			where: filter,
+			orderBy: {
+				priceOne: 'desc'
+			}
+		},
+		)
+		return tools
+	}
+	if (sort === 'popular') {
+		const tools = await prisma.tool.findMany({
+			where: filter,
+			orderBy: {
+				popularity: 'desc'
+			}
+		},
+		)
+		return tools
+	}
+	const tools = await prisma.tool.findMany({
+		where: filter,
+		orderBy: {
+			priceOne: 'asc'
+		}
+	},
+	)
+	return tools
 }
 
 export async function paginateAndFilterTools(query: IQuery): Promise<Tool[]> {
-	const { limit, offset, sort } = query
+	const { limit, offset, sort, manufacturers, typesTools, priceFrom, priceTo } = query
 	const offsetCalc = offset * limit
+	const filter = {} as Partial<IToolsFilter>
+
+	if (priceFrom && priceTo) {
+		filter.priceOne = {
+			gte: Number(priceFrom) || 1000,
+			lte: Number(priceTo) || 9000
+		}
+	}
+
+	if (manufacturers) {
+		filter.manufacturer = {
+			in: JSON.parse(decodeURIComponent(manufacturers))
+		}
+	}
+
+	if (typesTools) {
+		filter.type = {
+			in: JSON.parse(decodeURIComponent(typesTools))
+		}
+	}
+
 	if (sort === 'cheap') {
 		const tools = await prisma.tool.findMany({
+			where: filter,
 			take: limit,
 			skip: offsetCalc,
 			orderBy: {
@@ -28,6 +105,7 @@ export async function paginateAndFilterTools(query: IQuery): Promise<Tool[]> {
 	}
 	if (sort === 'expensive') {
 		const tools = await prisma.tool.findMany({
+			where: filter,
 			take: limit,
 			skip: offsetCalc,
 			orderBy: {
@@ -39,6 +117,7 @@ export async function paginateAndFilterTools(query: IQuery): Promise<Tool[]> {
 	}
 	if (sort === 'popular') {
 		const tools = await prisma.tool.findMany({
+			where: filter,
 			take: limit,
 			skip: offsetCalc,
 			orderBy: {
@@ -49,6 +128,7 @@ export async function paginateAndFilterTools(query: IQuery): Promise<Tool[]> {
 		return tools
 	}
 	const tools = await prisma.tool.findMany({
+		where: filter,
 		take: limit,
 		skip: offsetCalc,
 		orderBy: {

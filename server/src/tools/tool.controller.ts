@@ -10,7 +10,14 @@ export class ToolController {
 
 	async getAllTools(req: Request, res: Response): Promise<Response> {
 		try {
-			const tools = await getAllTools()
+			const { sort, priceFrom, priceTo, manufacturers, typesTools } = req.query
+			const tools = await getAllTools({
+				sort: String(sort),
+				priceFrom: String(priceFrom),
+				priceTo: String(priceTo),
+				manufacturers: String(manufacturers),
+				typesTools: String(typesTools),
+			})
 			return res.status(200).json(tools)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
@@ -19,8 +26,16 @@ export class ToolController {
 
 	async paginateAndFilterTools(req: Request, res: Response): Promise<Response> {
 		try {
-			const { limit, offset, sort } = req.query
-			const tools = await paginateAndFilterTools({ limit: Number(limit), offset: Number(offset), sort: String(sort) })
+			const { limit, offset, sort, priceFrom, priceTo, manufacturers, typesTools } = req.query
+			const tools = await paginateAndFilterTools({
+				limit: Number(limit),
+				offset: Number(offset),
+				sort: String(sort),
+				priceFrom: String(priceFrom),
+				priceTo: String(priceTo),
+				manufacturers: String(manufacturers),
+				typesTools: String(typesTools),
+			})
 			return res.status(200).json(tools)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
