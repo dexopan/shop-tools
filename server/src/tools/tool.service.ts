@@ -27,6 +27,19 @@ export async function getAllTools(query: Partial<IQuery>): Promise<Tool[]> {
 			lte: Number(priceTo) || 9000
 		}
 	}
+
+	if (manufacturers) {
+		filter.manufacturer = {
+			in: JSON.parse(decodeURIComponent(manufacturers))
+		}
+	}
+
+	if (typesTools) {
+		filter.type = {
+			in: JSON.parse(decodeURIComponent(typesTools))
+		}
+	}
+
 	if (sort === 'cheap') {
 		const tools = await prisma.tool.findMany({
 			where: filter,
