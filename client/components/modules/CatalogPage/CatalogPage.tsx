@@ -32,13 +32,22 @@ const CatalogPage = () => {
 	const manufacturers = useAppSelector(state => state.tools.manufacturers)
 	const typesTools = useAppSelector(state => state.tools.typesTools)
 
-	const [priceRange, setPriceRange] = useState([1000, 9000])
-	const [isPriceRangeChanged, setIsPriceRangeChanged] = useState(false)
-
+	const isPriceRangeInLocalStorage = (localStorage.getItem('priceFrom') || (localStorage.getItem('priceTo'))) ? true : false
+	const [priceRange, setPriceRange] = useState(isPriceRangeInLocalStorage ? [Number(localStorage.getItem('priceFrom')), Number(localStorage.getItem('priceTo'))] : [1000, 9000])
+	const [isPriceRangeChanged, setIsPriceRangeChanged] = useState(isPriceRangeInLocalStorage)
 	const isAnyManufacturerChecked = manufacturers.some(item => item.checked)
 	const isAnyTypesChecked = typesTools.some(item => item.checked)
 	const resetFilterBtnDisabled = !(isAnyManufacturerChecked || isAnyTypesChecked || isPriceRangeChanged)
 
+	const priceFrom = priceRange[0]
+	const priceTo = priceRange[1]
+	const priceQuery = (localStorage.getItem('priceFrom') || localStorage.getItem('priceTo')) ? `&priceFrom=${priceFrom}&priceTo=${priceTo}` : ''
+	const checkedManufacturers = manufacturers.filter(item => item.checked).map(item => item.name)
+	const checkedTypesTools = typesTools.filter(item => item.checked).map(item => item.name)
+	const encodedManufacturers = checkedManufacturers.length ? encodeURIComponent(JSON.stringify(checkedManufacturers)) : ''
+	const encodedTypesTools = checkedTypesTools.length ? encodeURIComponent(JSON.stringify(checkedTypesTools)) : ''
+	const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
+	const typesToolsQuery = `&typesTools=${encodedTypesTools}`
 
 	const createQueryString = useCallback(
 		(name: string, value: string) => {
@@ -52,14 +61,13 @@ const CatalogPage = () => {
 	const loadTools = async () => {
 		try {
 			setSpinner(true)
-			const allData = await getAllTools('/api/tool/all')
-			const limitData = await getToolsWithLimit('/api/tool?limit=4&offset=0&sort=cheap')
+			const allData = await getAllTools(`/api/tool/all?${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+			const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
+			const offsetQuery = createQueryString('offset', '1')
+			const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 			dispatch(setAllTools(allData))
 			if (!isValidOffset) {
-				const offsetQuery = createQueryString('offset', '1')
-				const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
 				router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
-
 				localStorage.setItem('offset', '1')
 				setCurrentPage(0)
 				dispatch(setToolWithLimit(limitData))
@@ -68,10 +76,7 @@ const CatalogPage = () => {
 
 			if (isValidOffset) {
 				if (Number(searchParams.get('offset')) > Math.ceil(allData.length / 4)) {
-					const offsetQuery = createQueryString('offset', '1')
-					const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
 					router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
-
 					localStorage.setItem('offset', '1')
 					setCurrentPage(0)
 					dispatch(setToolWithLimit(limitData))
@@ -81,8 +86,9 @@ const CatalogPage = () => {
 
 			const offset = Number(searchParams.get('offset')) - 1
 			localStorage.setItem('offset', `${offset + 1}`)
-			const sortFilter = localStorage.getItem('sort')
-			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=${sortFilter}`)
+			const sortFilter = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
+			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&${sortFilter}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+
 			setCurrentPage(offset)
 			dispatch(setToolWithLimit(result))
 		} catch (error: any) {
@@ -97,7 +103,14 @@ const CatalogPage = () => {
 	}, [])
 
 	const handlePageChange = async ({ selected }: { selected: number }) => {
-		const limitData = await getToolsWithLimit('/api/tool?limit=4&offset=0&sort=cheap')
+		const manufacturersToLocalStorage = localStorage.getItem('manufacturers') ? JSON.parse(localStorage.getItem('manufacturers') || '') : []
+		const typesToolsToLocalStorage = localStorage.getItem('typesTools') ? JSON.parse(localStorage.getItem('typesTools') || '') : []
+		const encodedManufacturers = manufacturersToLocalStorage.length ? encodeURIComponent(JSON.stringify(manufacturersToLocalStorage)) : ''
+		const encodedTypesTools = typesToolsToLocalStorage.length ? encodeURIComponent(JSON.stringify(typesToolsToLocalStorage)) : ''
+		const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
+		const typesToolsQuery = `&typesTools=${encodedTypesTools}`
+		const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
+		const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 		if (selected > pagesCount) {
 			setCurrentPage(0)
 			dispatch(setToolWithLimit(limitData))
@@ -109,19 +122,17 @@ const CatalogPage = () => {
 			dispatch(setToolWithLimit(limitData))
 			return
 		}
+
 		const offset = selected + 1
 		const offsetQuery = createQueryString('offset', offset.toString())
-		const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
-		router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
-
+		router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 		localStorage.setItem('offset', offset.toString())
 		setCurrentPage(selected)
-		const sortFilter = localStorage.getItem('sort')
-		const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${selected}&sort=${sortFilter}`)
+		const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${selected}&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 		dispatch(setToolWithLimit(result))
 	}
 
-	const resetFilters = () => {
+	const resetFilters = async () => {
 		const allManufactorers = manufacturers.map(item => {
 			return {
 				...item,
@@ -138,6 +149,22 @@ const CatalogPage = () => {
 		dispatch(setTypesTools(allTypes))
 		setPriceRange([1000, 9000])
 		setIsPriceRangeChanged(false)
+		setCurrentPage(0)
+		localStorage.removeItem('priceFrom')
+		localStorage.removeItem('priceTo')
+		localStorage.removeItem('manufacturers')
+		localStorage.removeItem('typesTools')
+		localStorage.setItem('offset', '1')
+		const sort = localStorage.getItem('sort')
+		const priceQuery = ''
+		const manufacturersQuery = '&manufacturers='
+		const typesToolsQuery = '&typesTools='
+		const allData = await getAllTools(`/api/tool/all?${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+		dispatch(setAllTools(allData))
+		const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&sort=${sort}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+		dispatch(setToolWithLimit(limitData))
+		router.push(`${pathname}?sort=${sort}&offset=1`)
+
 	}
 
 
@@ -154,7 +181,7 @@ const CatalogPage = () => {
 					</AnimatePresence>
 					<div className={styles.catalog__top__inner}>
 						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={resetFilterBtnDisabled} onClick={resetFilters}>Reset filters</button>
-						<FilterSelect />
+						<FilterSelect priceRange={priceRange} />
 					</div>
 				</div>
 				<div className={`${styles.catalog__bottom} ${darkModeClass}`}>
@@ -164,7 +191,9 @@ const CatalogPage = () => {
 							setPriceRange={setPriceRange}
 							setIsPriceRangeChanged={setIsPriceRangeChanged}
 							resetFilterBtnDisabled={resetFilterBtnDisabled}
-							resetFilters={resetFilters} />
+							resetFilters={resetFilters}
+							isPriceRangeChanged={isPriceRangeChanged}
+							setCurrentPage={setCurrentPage} />
 						{spinner ? (
 							<ul className={skeletonStyles.skeleton}>
 								{Array.from(Array(8).keys()).map((_, i) => (

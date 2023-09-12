@@ -8,15 +8,17 @@ import { getToolsWithLimit } from '@/http/api/tools';
 import { createSelectOption } from '@/utils/common';
 import { categoriesOption } from '@/utils/selectContent';
 import { ISelectOption, SelectOptionType } from '@/types/common';
+import { IFilterSelectProps } from '@/types/catalog';
 import { selectStyles, controlStyles, menuStyles } from '@/styles/catalog/select';
 import { optionStyles } from '@/styles/searchInput';
 
-const FilterSelect = () => {
+const FilterSelect = ({ priceRange }: IFilterSelectProps) => {
+	const updateCategoryOption = (value: string) => {
+		setCategorOption(createSelectOption(value))
+	}
 	const theme = useAppSelector(state => state.theme.theme)
-	const limitTools = useAppSelector(state => state.tools.limitTools)
-	const [categoryOption, setCategorOption] = useState<SelectOptionType>(null)
+	const [categoryOption, setCategorOption] = useState<SelectOptionType>({ value: 'Сheap ones first', label: 'Сheap ones first' })
 	const dispatch = useAppDispatch()
-
 	const router = useRouter()
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
@@ -32,43 +34,63 @@ const FilterSelect = () => {
 	const updateRoteParam = (first: string) => {
 		const sortQuery = createQueryString('sort', first)
 		const offsetQuery = localStorage.getItem('offset') ? createQueryString('offset', String(localStorage.getItem('offset'))) : ''
-		router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
+		const priceFrom = localStorage.getItem('priceFrom')
+		const priceTo = localStorage.getItem('priceTo')
+		const priceQuery = (localStorage.getItem('priceFrom') || localStorage.getItem('priceTo')) ? `&priceFrom=${priceFrom}&priceTo=${priceTo}` : ''
+
+		const manufacturersToLocalStorage = localStorage.getItem('manufacturers') ? JSON.parse(localStorage.getItem('manufacturers') || '') : []
+		const typesToolsToLocalStorage = localStorage.getItem('typesTools') ? JSON.parse(localStorage.getItem('typesTools') || '') : []
+		const encodedManufacturers = manufacturersToLocalStorage.length ? encodeURIComponent(JSON.stringify(manufacturersToLocalStorage)) : ''
+		const encodedTypesTools = typesToolsToLocalStorage.length ? encodeURIComponent(JSON.stringify(typesToolsToLocalStorage)) : ''
+		const manufacturersQuery = encodedManufacturers ? `&manufacturers=${encodedManufacturers}` : ''
+		const typesToolsQuery = encodedTypesTools ? `&typesTools=${encodedTypesTools}` : ''
+
+		router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 		localStorage.setItem('sort', first)
 	}
 
 	useEffect(() => {
 		const fetchTools = async () => {
 			const offset = Number(localStorage.getItem('offset')) - 1
-			const firstCheap = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=cheap`)
-			if (limitTools.length) {
-				switch (localStorage.getItem('sort')) {
-					case 'cheap':
-						updateCategoryOption('Сheap ones first')
-						dispatch(setToolWithLimit(firstCheap))
-						break;
-					case 'expensive':
-						const firstExpensive = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=expensive`)
-						updateCategoryOption('Expensive ones first')
-						dispatch(setToolWithLimit(firstExpensive))
-						break;
-					case 'popular':
-						const firstPopular = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=popular`)
-						updateCategoryOption('By popularity')
-						dispatch(setToolWithLimit(firstPopular))
-						break;
-					default:
-						updateCategoryOption('Сheap ones first')
-						dispatch(setToolWithLimit(firstCheap))
-						break;
-				}
+			const priceFrom = priceRange[0]
+			const priceTo = priceRange[1]
+			const priceQuery = (localStorage.getItem('priceFrom') || localStorage.getItem('priceTo')) ? `&priceFrom=${priceFrom}&priceTo=${priceTo}` : ''
+
+			const manufacturersToLocalStorage = localStorage.getItem('manufacturers') ? JSON.parse(localStorage.getItem('manufacturers') || '') : []
+			const typesToolsToLocalStorage = localStorage.getItem('typesTools') ? JSON.parse(localStorage.getItem('typesTools') || '') : []
+			const encodedManufacturers = manufacturersToLocalStorage.length ? encodeURIComponent(JSON.stringify(manufacturersToLocalStorage)) : ''
+			const encodedTypesTools = typesToolsToLocalStorage.length ? encodeURIComponent(JSON.stringify(typesToolsToLocalStorage)) : ''
+			const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
+			const typesToolsQuery = `&typesTools=${encodedTypesTools}`
+
+			const firstCheap = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=cheap${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+
+			switch (localStorage.getItem('sort')) {
+				case 'cheap':
+					updateCategoryOption('Сheap ones first')
+					dispatch(setToolWithLimit(firstCheap))
+					break;
+				case 'expensive':
+					const firstExpensive = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=expensive${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+					updateCategoryOption('Expensive ones first')
+					dispatch(setToolWithLimit(firstExpensive))
+					break;
+				case 'popular':
+					const firstPopular = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&sort=popular${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+					updateCategoryOption('By popularity')
+					dispatch(setToolWithLimit(firstPopular))
+					break;
+				default:
+					updateCategoryOption('Сheap ones first')
+					dispatch(setToolWithLimit(firstCheap))
+					break;
 			}
+
 		}
 		fetchTools()
-	}, [limitTools.length, localStorage.getItem('sort'), localStorage.getItem('offset')])
+	}, [localStorage.getItem('sort')])
 
-	const updateCategoryOption = (value: string) => {
-		setCategorOption(createSelectOption(value))
-	}
+
 
 	const handleSortOptionChange = async (selectedOption: SelectOptionType) => {
 		setCategorOption(selectedOption)
@@ -87,7 +109,7 @@ const FilterSelect = () => {
 
 	return (
 		<Select
-			value={categoryOption || createSelectOption('Сheap ones first')}
+			value={categoryOption as ISelectOption}
 			onChange={handleSortOptionChange}
 			styles={{
 				...selectStyles,

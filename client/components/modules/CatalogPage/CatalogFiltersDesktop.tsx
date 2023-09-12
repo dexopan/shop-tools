@@ -3,12 +3,12 @@ import { useAppSelector } from "@/store";
 import { setManufacturers, setTypesTools, updateManufacturers, updateTypesTools } from '@/store/toolSlice'
 import Accordion from "@/components/elements/accordion/Accordion";
 import FilterManufacturerAccordion from "./FilterManufacturerAccordion";
-import PriceRange from "./PriceRange";
+import PriceRangeSlider from "./PriceRangeSlider";
 import { ICatalogFilterDesktopProps } from "@/types/catalog";
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import styles from '@/styles/catalog/index.module.scss'
 
-const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner, resetFilters }: ICatalogFilterDesktopProps) => {
+const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChanged, resetFilterBtnDisabled, spinner, resetFilters, applyFilters }: ICatalogFilterDesktopProps) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	const manufacturers = useAppSelector(state => state.tools.manufacturers)
@@ -33,8 +33,7 @@ const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChang
 					titleClass={`${styles.filters__manufacturer__btn} ${darkModeClass}`}
 					arrowOpenClass={styles.open}>
 					<div className={`${styles.filters__manufacturer__inner} ${darkModeClass}`}>
-						<PriceRange priceRange={priceRange} setPriceRange={setPriceRange} setIsPriceRangeChanged={setIsPriceRangeChanged} />
-						<div style={{ height: 24 }} />
+						<PriceRangeSlider priceRange={priceRange} setPriceRange={setPriceRange} setIsPriceRangeChanged={setIsPriceRangeChanged} />
 					</div>
 				</Accordion>
 			</div>
@@ -48,7 +47,7 @@ const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChang
 			</div>
 
 			<div className={styles.filters__actions}>
-				<button className={styles.filters__actions__show} disabled={spinner || resetFilterBtnDisabled}>
+				<button className={styles.filters__actions__show} disabled={spinner || resetFilterBtnDisabled} onClick={applyFilters}>
 					{spinner ? <span
 						className={spinnerStyles.spinner}
 						style={{ top: 6, left: '47%' }}
