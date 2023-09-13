@@ -52,7 +52,7 @@ const CatalogFilters = ({
 			const typesToolsQuery = `&typesTools=${encodedTypesTools}`
 			const initialPage = 0
 			const offsetQuery = createQueryString('offset', (initialPage + 1).toString())
-			const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
+			const sortQuery = createQueryString('sort', String(localStorage.getItem('sort')))
 			const allData = await getAllTools(`/api/tool/all?${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 			localStorage.setItem('offset', '1')
 			localStorage.setItem('priceFrom', priceFrom.toString())
@@ -64,27 +64,37 @@ const CatalogFilters = ({
 			const response = await getToolsWithLimit(`/api/tool?limit=4&offset=${initialPage}&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 			dispatch(setToolWithLimit(response))
 			if (checkedManufacturers.length && checkedTypesTools.length && isPriceRangeChanged) {
-				router.push(`${pathname}?${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}&${offsetQuery}`)
-				return
-			}
-
-			if (isPriceRangeChanged) {
-				router.push(`${pathname}?${sortQuery}${priceQuery}&${offsetQuery}`)
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 				return
 			}
 
 			if (checkedManufacturers.length && checkedTypesTools.length) {
-				router.push(`${pathname}?${sortQuery}${manufacturersQuery}${typesToolsQuery}&${offsetQuery}`)
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${manufacturersQuery}${typesToolsQuery}`)
+				return
+			}
+
+			if (checkedManufacturers.length && isPriceRangeChanged) {
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${manufacturersQuery}`)
+				return
+			}
+
+			if (checkedTypesTools.length && isPriceRangeChanged) {
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${typesToolsQuery}`)
+				return
+			}
+
+			if (isPriceRangeChanged) {
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}`)
 				return
 			}
 
 			if (checkedManufacturers.length) {
-				router.push(`${pathname}?${sortQuery}${manufacturersQuery}&${offsetQuery}`)
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${manufacturersQuery}`)
 				return
 			}
 
 			if (checkedTypesTools.length) {
-				router.push(`${pathname}?${sortQuery}${typesToolsQuery}&${offsetQuery}`)
+				router.push(`${pathname}?${sortQuery}&${offsetQuery}${typesToolsQuery}`)
 				return
 			}
 

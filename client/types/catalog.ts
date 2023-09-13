@@ -63,4 +63,6 @@ export interface ICatalogFilterDesktopProps {
 
 export interface IFilterSelectProps {
 	priceRange: number[];
+	setSpinner: (arg0: boolean) => void;
+	setCurrentPage: (arg0: number) => void;
 }

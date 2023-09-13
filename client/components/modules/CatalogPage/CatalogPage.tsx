@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
@@ -39,16 +39,6 @@ const CatalogPage = () => {
 	const isAnyTypesChecked = typesTools.some(item => item.checked)
 	const resetFilterBtnDisabled = !(isAnyManufacturerChecked || isAnyTypesChecked || isPriceRangeChanged)
 
-	const priceFrom = priceRange[0]
-	const priceTo = priceRange[1]
-	const priceQuery = (localStorage.getItem('priceFrom') || localStorage.getItem('priceTo')) ? `&priceFrom=${priceFrom}&priceTo=${priceTo}` : ''
-	const checkedManufacturers = manufacturers.filter(item => item.checked).map(item => item.name)
-	const checkedTypesTools = typesTools.filter(item => item.checked).map(item => item.name)
-	const encodedManufacturers = checkedManufacturers.length ? encodeURIComponent(JSON.stringify(checkedManufacturers)) : ''
-	const encodedTypesTools = checkedTypesTools.length ? encodeURIComponent(JSON.stringify(checkedTypesTools)) : ''
-	const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
-	const typesToolsQuery = `&typesTools=${encodedTypesTools}`
-
 	const createQueryString = useCallback(
 		(name: string, value: string) => {
 			const params = new URLSearchParams()
@@ -58,78 +48,46 @@ const CatalogPage = () => {
 		[searchParams]
 	)
 
-	const loadTools = async () => {
+	const priceFrom = priceRange[0]
+	const priceTo = priceRange[1]
+	const priceQuery = (localStorage.getItem('priceFrom') || localStorage.getItem('priceTo')) ? `&priceFrom=${priceFrom}&priceTo=${priceTo}` : ''
+	const sortQuery = createQueryString('sort', String(localStorage.getItem('sort')))
+
+	const handlePageChange = async ({ selected }: { selected: number }) => {
 		try {
 			setSpinner(true)
-			const allData = await getAllTools(`/api/tool/all?${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-			const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
-			const offsetQuery = createQueryString('offset', '1')
+			const manufacturersToLocalStorage = localStorage.getItem('manufacturers') ? JSON.parse(localStorage.getItem('manufacturers') || '') : []
+			const typesToolsToLocalStorage = localStorage.getItem('typesTools') ? JSON.parse(localStorage.getItem('typesTools') || '') : []
+			const encodedManufacturers = manufacturersToLocalStorage.length ? encodeURIComponent(JSON.stringify(manufacturersToLocalStorage)) : ''
+			const encodedTypesTools = typesToolsToLocalStorage.length ? encodeURIComponent(JSON.stringify(typesToolsToLocalStorage)) : ''
+			const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
+			const typesToolsQuery = `&typesTools=${encodedTypesTools}`
+
 			const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-			dispatch(setAllTools(allData))
-			if (!isValidOffset) {
-				router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
-				localStorage.setItem('offset', '1')
+			if (selected > pagesCount) {
 				setCurrentPage(0)
 				dispatch(setToolWithLimit(limitData))
 				return
 			}
-
-			if (isValidOffset) {
-				if (Number(searchParams.get('offset')) > Math.ceil(allData.length / 4)) {
-					router.push(`${pathname}?${sortQuery}&${offsetQuery}`)
-					localStorage.setItem('offset', '1')
-					setCurrentPage(0)
-					dispatch(setToolWithLimit(limitData))
-					return
-				}
+			if (isValidOffset && Number(localStorage.getItem('offset')) > pagesCount) {
+				setCurrentPage(0)
+				dispatch(setToolWithLimit(limitData))
+				return
 			}
-
-			const offset = Number(searchParams.get('offset')) - 1
-			localStorage.setItem('offset', `${offset + 1}`)
-			const sortFilter = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
-			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${offset}&${sortFilter}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-
-			setCurrentPage(offset)
+			const offset = selected + 1
+			const offsetQuery = createQueryString('offset', offset.toString())
+			const manufacturersQ = manufacturersToLocalStorage.length ? `&manufacturers=${encodedManufacturers}` : ''
+			const typesToolsQ = typesToolsToLocalStorage.length ? `&typesTools=${encodedTypesTools}` : ''
+			router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${manufacturersQ}${typesToolsQ}`)
+			localStorage.setItem('offset', offset.toString())
+			setCurrentPage(selected)
+			const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${selected}&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 			dispatch(setToolWithLimit(result))
 		} catch (error: any) {
 			toast.error(error.response)
 		} finally {
 			setSpinner(false)
 		}
-	}
-
-	useEffect(() => {
-		loadTools()
-	}, [])
-
-	const handlePageChange = async ({ selected }: { selected: number }) => {
-		const manufacturersToLocalStorage = localStorage.getItem('manufacturers') ? JSON.parse(localStorage.getItem('manufacturers') || '') : []
-		const typesToolsToLocalStorage = localStorage.getItem('typesTools') ? JSON.parse(localStorage.getItem('typesTools') || '') : []
-		const encodedManufacturers = manufacturersToLocalStorage.length ? encodeURIComponent(JSON.stringify(manufacturersToLocalStorage)) : ''
-		const encodedTypesTools = typesToolsToLocalStorage.length ? encodeURIComponent(JSON.stringify(typesToolsToLocalStorage)) : ''
-		const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
-		const typesToolsQuery = `&typesTools=${encodedTypesTools}`
-		const sortQuery = localStorage.getItem('sort') ? createQueryString('sort', String(localStorage.getItem('sort'))) : ''
-		const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-		if (selected > pagesCount) {
-			setCurrentPage(0)
-			dispatch(setToolWithLimit(limitData))
-			return
-		}
-
-		if (isValidOffset && Number(localStorage.getItem('offset')) > pagesCount) {
-			setCurrentPage(0)
-			dispatch(setToolWithLimit(limitData))
-			return
-		}
-
-		const offset = selected + 1
-		const offsetQuery = createQueryString('offset', offset.toString())
-		router.push(`${pathname}?${sortQuery}&${offsetQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-		localStorage.setItem('offset', offset.toString())
-		setCurrentPage(selected)
-		const result = await getToolsWithLimit(`/api/tool?limit=4&offset=${selected}&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-		dispatch(setToolWithLimit(result))
 	}
 
 	const resetFilters = async () => {
@@ -155,18 +113,16 @@ const CatalogPage = () => {
 		localStorage.removeItem('manufacturers')
 		localStorage.removeItem('typesTools')
 		localStorage.setItem('offset', '1')
-		const sort = localStorage.getItem('sort')
+
 		const priceQuery = ''
 		const manufacturersQuery = '&manufacturers='
 		const typesToolsQuery = '&typesTools='
 		const allData = await getAllTools(`/api/tool/all?${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 		dispatch(setAllTools(allData))
-		const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&sort=${sort}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
+		const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
 		dispatch(setToolWithLimit(limitData))
-		router.push(`${pathname}?sort=${sort}&offset=1`)
-
+		router.push(`${pathname}?${sortQuery}&offset=1`)
 	}
-
 
 	return (
 		<section className={styles.catalog}>
@@ -181,7 +137,7 @@ const CatalogPage = () => {
 					</AnimatePresence>
 					<div className={styles.catalog__top__inner}>
 						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={resetFilterBtnDisabled} onClick={resetFilters}>Reset filters</button>
-						<FilterSelect priceRange={priceRange} />
+						<FilterSelect priceRange={priceRange} setSpinner={setSpinner} setCurrentPage={setCurrentPage} />
 					</div>
 				</div>
 				<div className={`${styles.catalog__bottom} ${darkModeClass}`}>
