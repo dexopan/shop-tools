@@ -14,9 +14,10 @@ export type SelectOptionType = MultiValue<ISelectOption> | SingleValue<ISelectOp
 
 export interface IAccordionProps {
 	children: React.ReactNode;
-	title?: string;
+	title?: string | false;
 	titleClass: string;
-	arrowOpenClass: string;
-	isMobileForFolters?: boolean;
+	arrowOpenClass?: string;
+	isMobileForFilters?: boolean;
 	hideArrowClass?: string;
+	callback?: (arg0: boolean) => void
 }

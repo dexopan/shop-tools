@@ -1,13 +1,14 @@
 'use client'
 import { useCallback, useState } from 'react'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
-import CatalogFiltersDesktop from './CatalogFiltersDesktop'
-import { ICatalogFilterProps } from '@/types/catalog'
 import { toast } from 'react-toastify'
-import { useAppSelector, useAppDispatch } from '@/store'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { setAllTools, setToolWithLimit } from '@/store/toolSlice'
+import { useAppSelector, useAppDispatch } from '@/store'
 import { getAllTools, getToolsWithLimit } from '@/http/api/tools'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import CatalogFiltersDesktop from './CatalogFiltersDesktop'
+import CatalogFiltersMobile from './CatalogFiltersMobile'
+import { ICatalogFilterProps } from '@/types/catalog'
 
 
 const CatalogFilters = ({
@@ -17,7 +18,9 @@ const CatalogFilters = ({
 	resetFilterBtnDisabled,
 	resetFilters,
 	isPriceRangeChanged,
-	setCurrentPage
+	setCurrentPage,
+	closePopup,
+	filtersMobileOpen
 }: ICatalogFilterProps) => {
 	const isMobile = useMediaQuery(820)
 	const [spinner, setSpinner] = useState(false)
@@ -106,7 +109,16 @@ const CatalogFilters = ({
 	}
 	return (
 		<>
-			{isMobile ? <div>Mobile</div> :
+			{isMobile ? <CatalogFiltersMobile
+				priceRange={priceRange}
+				setPriceRange={setPriceRange}
+				setIsPriceRangeChanged={setIsPriceRangeChanged}
+				resetFilterBtnDisabled={resetFilterBtnDisabled}
+				spinner={spinner}
+				resetFilters={resetFilters}
+				applyFilters={applyFilters}
+				closePopup={closePopup}
+				filtersMobileOpen={filtersMobileOpen} /> :
 				<CatalogFiltersDesktop
 					priceRange={priceRange}
 					setPriceRange={setPriceRange}

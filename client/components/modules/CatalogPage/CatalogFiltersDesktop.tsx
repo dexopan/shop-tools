@@ -22,7 +22,7 @@ const CatalogFiltersDesktop = ({ priceRange, setPriceRange, setIsPriceRangeChang
 			<div className={`${styles.filters__manufacturer} ${darkModeClass}`}>
 				<FilterManufacturerAccordion
 					manufacturersList={manufacturers}
-					title='Manufacturer'
+					title='Manufacturers'
 					setManufacturers={setManufacturers}
 					updateManufacturers={updateManufacturers} />
 			</div>

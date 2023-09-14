@@ -3,16 +3,18 @@ import { useCallback, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
-import { useAppDispatch, useAppSelector } from '@/store';
 import { AnimatePresence } from 'framer-motion';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { setAllTools, setToolWithLimit, setManufacturers, setTypesTools, updateManufacturers, updateTypesTools } from '@/store/toolSlice';
+import { usePopup } from '@/hooks/usePopup';
+import { getAllTools, getToolsWithLimit } from '@/http/api/tools';
 import ManufacturersBlock from './ManufacturersBlock';
 import CatalogItem from './CatalogItem';
 import FilterSelect from './FilterSelect';
 import CatalogFilters from './CatalogFilters';
-import { getAllTools, getToolsWithLimit } from '@/http/api/tools';
-import { setAllTools, setManufacturers, setToolWithLimit, setTypesTools, updateManufacturers, updateTypesTools } from '@/store/toolSlice';
-import styles from '@/styles/catalog/index.module.scss'
+import FilterSvg from '@/components/elements/svg/FilterSvg';
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
+import styles from '@/styles/catalog/index.module.scss'
 
 
 const CatalogPage = () => {
@@ -52,6 +54,8 @@ const CatalogPage = () => {
 	const priceTo = priceRange[1]
 	const priceQuery = (localStorage.getItem('priceFrom') || localStorage.getItem('priceTo')) ? `&priceFrom=${priceFrom}&priceTo=${priceTo}` : ''
 	const sortQuery = createQueryString('sort', String(localStorage.getItem('sort')))
+
+	const { open, closePopup, toggleOpen } = usePopup()
 
 	const handlePageChange = async ({ selected }: { selected: number }) => {
 		try {
@@ -136,7 +140,15 @@ const CatalogPage = () => {
 						{isAnyTypesChecked && <ManufacturersBlock title='Types:' manufacturersList={typesTools} event={updateTypesTools} />}
 					</AnimatePresence>
 					<div className={styles.catalog__top__inner}>
-						<button className={`${styles.catalog__top__reset} ${darkModeClass}`} disabled={resetFilterBtnDisabled} onClick={resetFilters}>Reset filters</button>
+						<button className={`${styles.catalog__top__reset} ${darkModeClass}`}
+							disabled={resetFilterBtnDisabled}
+							onClick={resetFilters}>
+							Reset filters
+						</button>
+						<button className={styles.catalog__top__mobile_btn} onClick={toggleOpen}>
+							<span className={styles.catalog__top__mobile_btn__svg}><FilterSvg /></span>
+							<span className={styles.catalog__top__mobile_btn__text}>Filters</span>
+						</button>
 						<FilterSelect priceRange={priceRange} setSpinner={setSpinner} setCurrentPage={setCurrentPage} />
 					</div>
 				</div>
@@ -149,7 +161,9 @@ const CatalogPage = () => {
 							resetFilterBtnDisabled={resetFilterBtnDisabled}
 							resetFilters={resetFilters}
 							isPriceRangeChanged={isPriceRangeChanged}
-							setCurrentPage={setCurrentPage} />
+							setCurrentPage={setCurrentPage}
+							closePopup={closePopup}
+							filtersMobileOpen={open} />
 						{spinner ? (
 							<ul className={skeletonStyles.skeleton}>
 								{Array.from(Array(8).keys()).map((_, i) => (

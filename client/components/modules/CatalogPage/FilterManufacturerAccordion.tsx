@@ -27,7 +27,7 @@ const FilterManufacturerAccordion = ({ manufacturersList, title, setManufacturer
 			title={title}
 			titleClass={`${styles.filters__manufacturer__btn} ${darkModeClass}`}
 			arrowOpenClass={styles.open}
-			isMobileForFolters={isMobile}
+			isMobileForFilters={isMobile}
 			hideArrowClass={isMobile ? styles.hide_arrow : ''}
 		>
 			<div className={styles.filters__manufacturer__inner}>

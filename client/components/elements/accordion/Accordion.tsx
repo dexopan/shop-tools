@@ -4,23 +4,29 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IAccordionProps } from "@/types/common";
 
-const Accordion = ({ children, title, titleClass, arrowOpenClass, isMobileForFolters, hideArrowClass }: IAccordionProps) => {
+const Accordion = ({ children, title, titleClass, arrowOpenClass, isMobileForFilters, hideArrowClass, callback }: IAccordionProps) => {
 	const [expanded, setExpanded] = useState(false);
 
-	const toggleAccordion = () => setExpanded(!expanded);
+	const toggleAccordion = () => {
+		if (callback) {
+			callback(expanded)
+		}
+
+		setExpanded(!expanded)
+	}
 
 	return (
 		<>
-			{title ? (isMobileForFolters ? <button className={`${titleClass} ${hideArrowClass}`}>{title}</button> : (
+			{title ? (isMobileForFilters ? <button className={`${titleClass} ${hideArrowClass}`}>{title}</button> : (
 				<motion.button
 					initial={false}
 					onClick={toggleAccordion}
-					className={`${titleClass} ${expanded ? (isMobileForFolters ? '' : arrowOpenClass) : ''}`}
+					className={`${titleClass} ${expanded ? (isMobileForFilters ? '' : arrowOpenClass) : ''}`}
 				>
 					{title}
 				</motion.button>)) : ''}
 			<AnimatePresence initial={false}>
-				{isMobileForFolters || expanded && (
+				{(isMobileForFilters || expanded) && (
 					<motion.div
 						key="content"
 						initial="collapsed"
