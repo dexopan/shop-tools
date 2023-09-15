@@ -1,9 +1,12 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link';
-import { useAppSelector } from '@/store';
+import { toast } from 'react-toastify';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { removeFromCart, updateCart } from "@/store/cartSlice"
 import CartHoverCheckedSvg from '@/components/elements/svg/CartHoverCheckedSvg';
 import CartHoverSvg from '@/components/elements/svg/CartHoverSvg';
+import { addItemToCart, removeItemFromCart } from '@/http/api/cart';
 import { formatPrice } from '@/utils/common';
 import { ITool } from '@/types/tool';
 import styles from '@/styles/catalog/index.module.scss'
@@ -12,11 +15,30 @@ import spinnerStyles from '@/styles/spinner/index.module.scss'
 const CatalogItem = ({ item }: { item: ITool }) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
-
-	const shoppingCart = useAppSelector(state => state.cart.cart)
-	const isInCart = shoppingCart.some(cartItem => cartItem.toolId === item.id)
-
+	const user = useAppSelector(state => state.user.user)
+	const cart = useAppSelector(state => state.cart.cart)
+	const isInCart = cart.tools.some(cartItem => cartItem.tool.id === item.id)
+	const dispatch = useAppDispatch()
 	const [spinner, setSpinner] = useState(false)
+
+	const toggleCartItem = async () => {
+		try {
+			setSpinner(true)
+			if (isInCart) {
+				await removeItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.id })
+				dispatch(removeFromCart(item.id))
+				console.log(cart)
+				return
+			}
+			const data = await addItemToCart({ url: '/api/basket/add', userId: user.id, toolId: item.id })
+			dispatch(updateCart(data))
+		} catch (error: any) {
+			toast.error((error as Error).message)
+		} finally {
+			setSpinner(false)
+		}
+	}
+
 	return (
 		<li className={`${styles.catalog__list__item} ${darkModeClass}`}>
 			<img src={item.images[0]} alt={item.name} />
@@ -29,7 +51,8 @@ const CatalogItem = ({ item }: { item: ITool }) => {
 			</div>
 			<button
 				className={`${styles.catalog__list__item__cart} ${isInCart ? styles.added : ''}`}
-				disabled={spinner}>
+				disabled={spinner}
+				onClick={toggleCartItem}>
 				{spinner ?
 					<div className={spinnerStyles.spinner} style={{ top: 6, left: 6 }} />
 					:

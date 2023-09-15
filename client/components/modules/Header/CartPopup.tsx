@@ -1,25 +1,45 @@
 'use client';
-import { forwardRef } from "react"
+import { forwardRef, useEffect } from "react"
 import Link from "next/link";
-import { useAppSelector } from '@/store';
 import { AnimatePresence, motion } from "framer-motion"
+import { useAppDispatch, useAppSelector } from '@/store';
+import { setCart } from "@/store/cartSlice";
 import ShoppingCartSvg from "@/components/elements/svg/shoppingCartSvg";
 import { withClickOutside } from "@/utils/withClickOutside";
 import { IWrapperComponentProps } from "@/types/common"
+import CartPopupItem from "./CartPopupItem";
+import { getCartItems } from "@/http/api/cart";
+import { toast } from "react-toastify";
 import styles from "@/styles/cartPopup/index.module.scss"
+import { setUser } from "@/store/userSlice";
+
 
 const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, setOpen }, ref) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	const cart = useAppSelector(state => state.cart.cart)
-	const toggleCartDropdown = () => {
-		setOpen(!open)
+	const dispatch = useAppDispatch()
+
+	const toggleCartDropdown = () => setOpen(!open)
+	const username = localStorage.getItem('username')
+	const loadCartItems = async () => {
+		try {
+			const cartItems = await getCartItems(`/api/basket/${username}`)
+			dispatch(setCart(cartItems[0]))
+		} catch (error) {
+			toast.error((error as Error).message)
+		}
 	}
+
+	useEffect(() => {
+		loadCartItems()
+	}, [cart.tools.length])
+
 
 	return (
 		<div className={styles.cart} ref={ref}>
 			<button className={`${styles.cart__btn} ${darkModeClass}`} onClick={toggleCartDropdown}>
-				{!!cart.length && <span className={styles.cart__btn__count}>{cart.length}</span>}
+				{!!cart.tools.length && <span className={styles.cart__btn__count}>{cart.tools.length}</span>}
 				<span className={styles.cart__svg}>
 					<ShoppingCartSvg />
 				</span>
@@ -35,8 +55,8 @@ const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, se
 						style={{ transformOrigin: 'right-top' }}>
 						<h3 className={`${styles.cart__popup__title}  ${darkModeClass}`}>Shopping Cart</h3>
 						<ul className={styles.cart__popup__list}>
-							{cart.length ?
-								cart.map((item) => <li key={item.id}> </li>)
+							{cart.tools.length ?
+								cart.tools.map((item) => <CartPopupItem key={item.tool.id} item={item} />)
 								:
 								<li className={styles.cart__popup__empty}>
 									<span className={`${styles.cart__popup__empty__text} ${darkModeClass}`}>Cart is empty</span>
@@ -45,10 +65,10 @@ const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, se
 						<div className={styles.cart__popup__footer}>
 							<div className={styles.cart__popup__footer__total}>
 								<span className={`${styles.cart__popup__footer__text} ${darkModeClass}`}>Total amount of the order:</span>
-								<span className={`${styles.cart__popup__footer__price} ${darkModeClass}`}>0</span>
+								<span className={`${styles.cart__popup__footer__price} ${darkModeClass}`}>{cart.totalPrice}</span>
 							</div>
 							<Link href='/order' passHref legacyBehavior>
-								<button className={styles.cart__popup__footer__btn} disabled={!cart.length}>Make an order</button>
+								<button className={styles.cart__popup__footer__btn} disabled={!cart.tools.length}>Make an order</button>
 							</Link>
 						</div>
 					</motion.ul>}

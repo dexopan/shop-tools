@@ -15,8 +15,8 @@ const DashboardPage = () => {
 	const [bestsellers, setBestsellers] = useState<ITool[]>([])
 	const [newParts, setNewParts] = useState<ITool[]>([])
 	const [spinner, setSpinner] = useState<boolean>(false)
-	const shoppingCart = useAppSelector(state => state.cart.cart)
-	const [showAlert, setShowAlert] = useState<boolean>(!!shoppingCart.length)
+	const cart = useAppSelector(state => state.cart.cart)
+	const [showAlert, setShowAlert] = useState<boolean>(!!cart.tools.length)
 
 	useEffect(() => {
 		loadTools()
@@ -50,7 +50,7 @@ const DashboardPage = () => {
 						exit={{ opacity: 0 }}
 						className={`${styles.dashboard__alert} ${darkModeClass}`}
 					>
-						<CartAlert closeAlert={closeAlert} count={shoppingCart.length} />
+						<CartAlert closeAlert={closeAlert} count={cart.tools.length} />
 					</motion.div>
 					}
 				</AnimatePresence>
