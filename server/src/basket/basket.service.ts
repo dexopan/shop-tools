@@ -194,7 +194,7 @@ export async function deleteToolFromBasket(toolId: string, userId: string): Prom
 
 
 
-export async function deleteAllToolsFromBasket(userId: string): Promise<void> {
+export async function deleteAllToolsFromBasket(userId: string): Promise<Basket> {
 
 	const basket = await prisma.basket.findUnique({
 		where: {
@@ -208,11 +208,24 @@ export async function deleteAllToolsFromBasket(userId: string): Promise<void> {
 		},
 	})
 
-	await prisma.basket.delete({
+	const basketUpdate = await prisma.basket.update({
 		where: {
 			userId
+		},
+		data: {
+			quantity: 0,
+			totalPrice: 0,
+			tools: {
+				deleteMany: {}
+			}
+		},
+		include: {
+			tools: {
+				include: { tool: true }
+			}
 		}
 	})
+	return basketUpdate
 }
 
 
