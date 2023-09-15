@@ -13,7 +13,11 @@ export async function getAll(username: string): Promise<Basket[]> {
 		where: {
 			userId: user.id
 		},
-		include: { tools: true }
+		include: {
+			tools: {
+				include: { tool: true }
+			}
+		}
 	})
 	return basket
 }
@@ -52,6 +56,11 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 						}
 					}],
 				}
+			},
+			include: {
+				tools: {
+					include: { tool: true }
+				}
 			}
 		})
 		return newBasket
@@ -85,6 +94,11 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 						}
 					}]
 				}
+			},
+			include: {
+				tools: {
+					include: { tool: true }
+				}
 			}
 		})
 		return addFirstToolToBasket
@@ -116,6 +130,11 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 					},
 				}]
 			}
+		},
+		include: {
+			tools: {
+				include: { tool: true }
+			}
 		}
 	})
 	return addToolToBasket
@@ -137,6 +156,8 @@ export async function deleteToolFromBasket(toolId: string, userId: string): Prom
 				toolId,
 				basketId: basket.id
 			}
+		}, include: {
+			tool: true
 		}
 	})
 
@@ -160,6 +181,11 @@ export async function deleteToolFromBasket(toolId: string, userId: string): Prom
 		data: {
 			quantity: basket.quantity - toolInBasketDelete.count,
 			totalPrice: basket.totalPrice - toolInBasketDelete.price,
+		},
+		include: {
+			tools: {
+				include: { tool: true }
+			}
 		}
 	})
 

@@ -8,7 +8,7 @@ const basketController = new BasketController();
 
 router.get('/:username', authMiddleware, basketController.getAll);
 router.post('/add', basketController.addToolToBasket);
-router.delete('/delete/', basketController.deleteToolFromBasket);
+router.delete('/delete', basketController.deleteToolFromBasket);
 router.delete('/delete/all', basketController.deleteAllToolsFromBasket);
 
 
