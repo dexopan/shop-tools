@@ -4,12 +4,12 @@ type InitialState = {
 	theme: string;
 };
 
-if (!global.localStorage?.getItem('theme')) {
-	global.localStorage?.setItem('theme', 'light');
+if (!localStorage.getItem('theme')) {
+	localStorage.setItem('theme', 'light');
 }
 
 const initialState: InitialState = {
-	theme: global.localStorage.getItem('theme') || 'light'
+	theme: localStorage.getItem('theme') || 'light'
 };
 
 

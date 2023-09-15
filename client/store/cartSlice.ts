@@ -1,43 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IShoppingCart, IShoppingCartItem } from '@/types/tool';
 
-interface ITool {
-	id: string
-	manufacturer: string
-	priceOne: number
-	vendorCode: string
-	name: string
-	type: string
-	description: string
-	images: string[]
-	inStock: number
-	bestseller: boolean
-	new: boolean
-	popularity: number
-}
-
-interface IBasket {
-	id: string
-	userId: string
-	quantity: number
-	totalPrice: number
-}
-
-interface IShoppingCartItem {
-	id: string
-	tool: ITool
-	toolId: string
-	basket: IBasket
-	basketId: string
-	count: number
-	price: number
-}
 
 type InitialState = {
-	cart: IShoppingCartItem[]
+	cart: IShoppingCart
 };
 
 const initialState: InitialState = {
-	cart: []
+	cart: {
+		tools: [],
+		quantity: 0,
+		totalPrice: 0,
+		username: '',
+		id: ''
+	}
 };
 
 
@@ -45,43 +21,19 @@ const cartSlice = createSlice({
 	name: 'shoppingCart',
 	initialState,
 	reducers: {
-		addToCart: (state, action) => {
-			const { id, tool, toolId, basket, basketId, count, price } = action.payload;
-			const item = state.cart.find((item) => item.id === id);
-			if (!item) {
-				state.cart.push({ id, tool, toolId, basket, basketId, count, price });
-			}
-		},
-		removeFromCart: (state, action) => {
-			const { id } = action.payload;
-			const index = state.cart.findIndex((item) => item.id === id);
-			if (index !== -1) {
-				state.cart.splice(index, 1);
-			}
-		},
-		incrementQuantity: (state, action) => {
-			const { id } = action.payload;
-			const item = state.cart.find((item) => item.id === id);
-			if (item) {
-				item.count++;
-				item.price = item.tool.priceOne * item.count;
-			}
-		},
-		decrementQuantity: (state, action) => {
-			const { id } = action.payload;
-			const item = state.cart.find((item) => item.id === id);
-			if (item) {
-				item.count--;
-				item.price = item.tool.priceOne * item.count;
-			}
-		},
-		clearCart: (state) => {
-			state.cart = [];
-		}
+		setCart(state, action) {
+			state.cart = action.payload
 
+		},
+		updateCart(state, action) {
+			state.cart = action.payload
+		},
+		removeFromCart(state, action) {
+			state.cart.tools = state.cart.tools.filter((item) => item.tool.id !== action.payload);
+		}
 	}
 });
 
-export const { addToCart, clearCart, decrementQuantity, incrementQuantity, removeFromCart } = cartSlice.actions;
+export const { setCart, updateCart, removeFromCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -23,6 +23,7 @@ const useRedirectByUserCheck = (isAuthPage = false) => {
 		if (isAuthPage) {
 			if (data) {
 				router.push('/main')
+				dispatch(setUser(data.result))
 				return
 			}
 			setShouldLoadContent(true)
