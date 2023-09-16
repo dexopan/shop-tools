@@ -7,6 +7,7 @@ import styles from '@/styles/dashboard/index.module.scss'
 const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
+	const cart = useAppSelector(state => state.cart.cart)
 
 	const showCountMessage = (count: number) => {
 		if (count === 0) {
@@ -22,7 +23,7 @@ const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
 		<>
 			<div className={`${styles.dashboard__alert__left} ${darkModeClass}`}>
 				<span>{showCountMessage(count)} </span>
-				<span>For the amount of {formatPrice(0)} P </span>
+				<span>For the amount of {formatPrice(cart.totalPrice)} P </span>
 			</div>
 			<div className={styles.dashboard__alert__right}>
 				<Link href="/order" legacyBehavior passHref>

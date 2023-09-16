@@ -16,7 +16,7 @@ const PriceRangeSlider = ({ priceRange, setPriceRange, setIsPriceRangeChanged }:
 		<Box style={{ height: 50, marginTop: 35 }} sx={{ width: 250 }}>
 			<Slider
 				getAriaLabel={() => 'Price range'}
-				min={0}
+				min={1}
 				max={10000}
 				defaultValue={[1000, 9000]}
 				value={priceRange}

@@ -2,6 +2,7 @@ import prisma from "../utils/db.server";
 import type { Request, Response } from 'express';
 import { hash, compare } from "bcrypt";
 import jwt from 'jsonwebtoken'
+import { createBasket } from "../basket/basket.service";
 
 type User = {
 	id: string;
@@ -44,6 +45,7 @@ export class UserController {
 					updatedAt: new Date(),
 				}
 			})
+			await createBasket(user.id)
 
 			return res.status(201).json({ message: "User created successfully", user });
 		}

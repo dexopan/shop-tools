@@ -22,7 +22,21 @@ export async function getAll(username: string): Promise<Basket[]> {
 	return basket
 }
 
-
+export async function createBasket(userId: string): Promise<Basket> {
+	const basket = await prisma.basket.create({
+		data: {
+			userId,
+			quantity: 0,
+			totalPrice: 0,
+		},
+		include: {
+			tools: {
+				include: { tool: true }
+			}
+		}
+	})
+	return basket
+}
 
 export async function addToolToBasket(toolId: string, userId: string): Promise<Basket> {
 
@@ -38,33 +52,6 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 		}
 	})
 
-
-	if (!basket) {
-		const newBasket = await prisma.basket.create({
-			data: {
-				userId,
-				quantity: 1,
-				totalPrice: tool.priceOne,
-				tools: {
-					create: [{
-						count: 1,
-						price: tool.priceOne,
-						tool: {
-							connect: {
-								id: tool.id
-							}
-						}
-					}],
-				}
-			},
-			include: {
-				tools: {
-					include: { tool: true }
-				}
-			}
-		})
-		return newBasket
-	}
 
 	const toolsOnBaskets = await prisma.toolsOnBaskets.findUnique({
 		where: {
