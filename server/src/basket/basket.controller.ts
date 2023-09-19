@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { getAll, addToolToBasket, deleteToolFromBasket, deleteAllToolsFromBasket } from './basket.service'
+import { getAll, addToolToBasket, deleteToolFromBasket, deleteAllToolsFromBasket, removeToolFromBasket } from './basket.service'
 
 export class BasketController {
 	async getAll(req: Request, res: Response): Promise<Response> {
@@ -17,6 +17,16 @@ export class BasketController {
 			const { toolId, userId } = req.body
 			const toolToBasket = await addToolToBasket(toolId, userId)
 			return res.status(200).json(toolToBasket)
+		} catch (error) {
+			return res.status(500).json({ error: error.message })
+		}
+	}
+
+	async removeToolFromBasket(req: Request, res: Response): Promise<Response> {
+		try {
+			const { toolId, userId } = req.body
+			const removeTool = await removeToolFromBasket(toolId, userId)
+			return res.status(200).json(removeTool)
 		} catch (error) {
 			return res.status(500).json({ error: error.message })
 		}

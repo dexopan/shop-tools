@@ -15,7 +15,10 @@ export async function getAll(username: string): Promise<Basket[]> {
 		},
 		include: {
 			tools: {
-				include: { tool: true }
+				include: { tool: true },
+				orderBy: {
+					createdAt: 'asc'
+				}
 			}
 		}
 	})
@@ -84,7 +87,10 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 			},
 			include: {
 				tools: {
-					include: { tool: true }
+					include: { tool: true },
+					orderBy: {
+						createdAt: 'asc'
+					}
 				}
 			}
 		})
@@ -120,7 +126,10 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 		},
 		include: {
 			tools: {
-				include: { tool: true }
+				include: { tool: true },
+				orderBy: {
+					createdAt: 'asc'
+				}
 			}
 		}
 	})
@@ -128,6 +137,96 @@ export async function addToolToBasket(toolId: string, userId: string): Promise<B
 }
 
 
+export async function removeToolFromBasket(toolId: string, userId: string): Promise<Basket> {
+	const tool = await prisma.tool.findUnique({
+		where: {
+			id: toolId
+		}
+	})
+
+	const basket = await prisma.basket.findUnique({
+		where: {
+			userId
+		}
+	})
+
+	const toolsOnBaskets = await prisma.toolsOnBaskets.findUnique({
+		where: {
+			toolId_basketId: {
+				toolId,
+				basketId: basket.id
+			}
+		}
+	})
+
+	if (toolsOnBaskets.count == 1) {
+		const toolInBasketDelete = await prisma.toolsOnBaskets.delete({
+			where: {
+				toolId_basketId: {
+					toolId,
+					basketId: basket.id
+				}
+			},
+		})
+
+		const basketUpdate = await prisma.basket.update({
+			where: {
+				userId
+			},
+			data: {
+				quantity: basket.quantity - toolInBasketDelete.count,
+				totalPrice: basket.totalPrice - toolInBasketDelete.price,
+			},
+			include: {
+				tools: {
+					include: { tool: true },
+				}
+			}
+		})
+		return basketUpdate
+	}
+
+	const removeToolFromBasket = await prisma.basket.update({
+		where: {
+			userId
+		},
+		data: {
+			quantity: basket.quantity - 1,
+			totalPrice: basket.totalPrice - tool.priceOne,
+			tools: {
+				update: [{
+					where: {
+						toolId_basketId: {
+							toolId: tool.id,
+							basketId: basket.id
+						}
+					},
+					data: {
+						count: toolsOnBaskets.count - 1,
+						price: toolsOnBaskets.price - tool.priceOne,
+						tool: {
+							connect: {
+								id: toolId
+							}
+						}
+					},
+				}]
+			}
+		},
+		include: {
+			tools: {
+				include: { tool: true },
+				orderBy: {
+					createdAt: 'asc'
+				}
+			},
+		},
+	})
+
+
+
+	return removeToolFromBasket
+}
 
 export async function deleteToolFromBasket(toolId: string, userId: string): Promise<Basket> {
 
