@@ -2,10 +2,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { removeFromCart } from '@/store/cartSlice';
+import { deleteFromCart } from '@/store/cartSlice';
 import { formatPrice } from '@/utils/common';
 import DeleteSvg from '@/components/elements/svg/DeleteSvg';
-import { removeItemFromCart } from '@/http/api/cart';
+import CartItemCounter from '@/components/elements/cartItemCounter/CartItemCounter';
+import { deleteItemFromCart } from '@/http/api/cart';
 import { IShoppingCartItem, } from '@/types/tool'
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import styles from '@/styles/cartPopup/index.module.scss'
@@ -13,7 +14,7 @@ import styles from '@/styles/cartPopup/index.module.scss'
 const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
-	const spinnerDarkModeClass = theme === 'dark' ? `${spinnerStyles.dark_mode}` : '';
+	const spinnerDarkModeClass = theme === 'dark' ? '' : `${spinnerStyles.dark_mode}`;
 	const [spinner, setSpinner] = useState(false)
 	const user = useAppSelector(state => state.user.user)
 
@@ -23,10 +24,13 @@ const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
 
 	const deleteCartItem = async () => {
 		try {
-			await removeItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.tool.id })
-			dispatch(removeFromCart(item.tool.id))
+			setSpinner(true)
+			await deleteItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.tool.id })
+			dispatch(deleteFromCart(item.tool.id))
 		} catch (error) {
 			toast.error((error as Error).message)
+		} finally {
+			setSpinner(false)
 		}
 	}
 
@@ -55,7 +59,7 @@ const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
 				{item.tool.inStock === 0 ? (
 					<span className={styles.cart__popup__list__item__empty}>Out of stock</span>
 				) : (
-					<div></div>
+					<CartItemCounter item={item} />
 				)}
 				<span className={`${styles.cart__popup__list__item__price} ${darkModeClass}`}>
 					{formatPrice(item.price)} P

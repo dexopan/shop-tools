@@ -23,6 +23,15 @@ export const addItemToCart = async ({ url, userId, toolId }: IAddToCart) => {
 
 export const removeItemFromCart = async ({ url, userId, toolId }: IRemoveFromCart) => {
 	try {
+		const { data } = await $authHost.post(url, { userId, toolId })
+		return data
+	} catch (error: any) {
+		showAuthError(error.response)
+	}
+}
+
+export const deleteItemFromCart = async ({ url, userId, toolId }: IRemoveFromCart) => {
+	try {
 		const { data } = await $authHost.delete(url, { data: { userId, toolId } })
 		return data
 	} catch (error: any) {

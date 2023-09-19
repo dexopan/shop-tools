@@ -6,12 +6,12 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { setCart } from "@/store/cartSlice";
 import ShoppingCartSvg from "@/components/elements/svg/shoppingCartSvg";
 import { withClickOutside } from "@/utils/withClickOutside";
+import { formatPrice } from "@/utils/common";
 import { IWrapperComponentProps } from "@/types/common"
 import CartPopupItem from "./CartPopupItem";
 import { getCartItems } from "@/http/api/cart";
 import { toast } from "react-toastify";
 import styles from "@/styles/cartPopup/index.module.scss"
-import { setUser } from "@/store/userSlice";
 
 
 const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, setOpen }, ref) => {
@@ -64,8 +64,8 @@ const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, se
 						</ul>
 						<div className={styles.cart__popup__footer}>
 							<div className={styles.cart__popup__footer__total}>
-								<span className={`${styles.cart__popup__footer__text} ${darkModeClass}`}>Total amount of the order:</span>
-								<span className={`${styles.cart__popup__footer__price} ${darkModeClass}`}>{cart.totalPrice}</span>
+								<span className={`${styles.cart__popup__footer__text} ${darkModeClass}`}>Total order amount:</span>
+								<span className={`${styles.cart__popup__footer__price} ${darkModeClass}`}>{formatPrice(cart.totalPrice)} P</span>
 							</div>
 							<Link href='/order' passHref legacyBehavior>
 								<button className={styles.cart__popup__footer__btn} disabled={!cart.tools.length}>Make an order</button>

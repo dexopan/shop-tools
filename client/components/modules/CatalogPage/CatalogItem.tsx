@@ -3,10 +3,10 @@ import { useState } from 'react'
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { removeFromCart, updateCart } from "@/store/cartSlice"
+import { deleteFromCart, updateCart } from "@/store/cartSlice"
 import CartHoverCheckedSvg from '@/components/elements/svg/CartHoverCheckedSvg';
 import CartHoverSvg from '@/components/elements/svg/CartHoverSvg';
-import { addItemToCart, removeItemFromCart } from '@/http/api/cart';
+import { addItemToCart, deleteItemFromCart } from '@/http/api/cart';
 import { formatPrice } from '@/utils/common';
 import { ITool } from '@/types/tool';
 import styles from '@/styles/catalog/index.module.scss'
@@ -25,9 +25,8 @@ const CatalogItem = ({ item }: { item: ITool }) => {
 		try {
 			setSpinner(true)
 			if (isInCart) {
-				await removeItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.id })
-				dispatch(removeFromCart(item.id))
-				console.log(cart)
+				await deleteItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.id })
+				dispatch(deleteFromCart(item.id))
 				return
 			}
 			const data = await addItemToCart({ url: '/api/basket/add', userId: user.id, toolId: item.id })
