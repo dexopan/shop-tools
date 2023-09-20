@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { updateCart } from '@/store/cartSlice';
+import { setCart } from '@/store/cartSlice';
 import { addItemToCart, removeItemFromCart } from '@/http/api/cart';
 import MinusSvg from '../svg/MinusSvg';
 import PlusSvg from '../svg/PlusSvg';
@@ -32,7 +32,7 @@ const CartItemCounter = ({ item }: { item: IShoppingCartItem }) => {
 		try {
 			setSpinner(true)
 			const data = await removeItemFromCart({ url: '/api/basket/remove', userId: user.id, toolId: item.tool.id })
-			dispatch(updateCart(data))
+			dispatch(setCart(data))
 		}
 		catch (error) {
 			toast.error((error as Error).message)
@@ -45,7 +45,7 @@ const CartItemCounter = ({ item }: { item: IShoppingCartItem }) => {
 		try {
 			setSpinner(true)
 			const data = await addItemToCart({ url: '/api/basket/add', userId: user.id, toolId: item.tool.id })
-			dispatch(updateCart(data))
+			dispatch(setCart(data))
 		} catch (error) {
 			toast.error((error as Error).message)
 		} finally {

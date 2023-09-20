@@ -67,17 +67,6 @@ const CatalogPage = () => {
 			const manufacturersQuery = `&manufacturers=${encodedManufacturers}`
 			const typesToolsQuery = `&typesTools=${encodedTypesTools}`
 
-			const limitData = await getToolsWithLimit(`/api/tool?limit=4&offset=0&${sortQuery}${priceQuery}${manufacturersQuery}${typesToolsQuery}`)
-			if (selected > pagesCount) {
-				setCurrentPage(0)
-				dispatch(setToolWithLimit(limitData))
-				return
-			}
-			if (isValidOffset && Number(localStorage.getItem('offset')) > pagesCount) {
-				setCurrentPage(0)
-				dispatch(setToolWithLimit(limitData))
-				return
-			}
 			const offset = selected + 1
 			const offsetQuery = createQueryString('offset', offset.toString())
 			const manufacturersQ = manufacturersToLocalStorage.length ? `&manufacturers=${encodedManufacturers}` : ''

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IShoppingCart, IShoppingCartItem } from '@/types/tool';
+import { IShoppingCart } from '@/types/tool';
 
 
 type InitialState = {
@@ -23,17 +23,10 @@ const cartSlice = createSlice({
 	reducers: {
 		setCart(state, action) {
 			state.cart = action.payload
-
-		},
-		updateCart(state, action) {
-			state.cart = action.payload
-		},
-		deleteFromCart(state, action) {
-			state.cart.tools = state.cart.tools.filter((item) => item.tool.id !== action.payload);
 		}
 	}
 });
 
-export const { setCart, updateCart, deleteFromCart } = cartSlice.actions;
+export const { setCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

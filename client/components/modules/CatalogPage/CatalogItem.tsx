@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { deleteFromCart, updateCart } from "@/store/cartSlice"
+import { setCart } from '@/store/cartSlice';
 import CartHoverCheckedSvg from '@/components/elements/svg/CartHoverCheckedSvg';
 import CartHoverSvg from '@/components/elements/svg/CartHoverSvg';
 import { addItemToCart, deleteItemFromCart } from '@/http/api/cart';
@@ -25,12 +25,12 @@ const CatalogItem = ({ item }: { item: ITool }) => {
 		try {
 			setSpinner(true)
 			if (isInCart) {
-				await deleteItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.id })
-				dispatch(deleteFromCart(item.id))
+				const data = await deleteItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.id })
+				dispatch(setCart(data))
 				return
 			}
 			const data = await addItemToCart({ url: '/api/basket/add', userId: user.id, toolId: item.id })
-			dispatch(updateCart(data))
+			dispatch(setCart(data))
 		} catch (error: any) {
 			toast.error((error as Error).message)
 		} finally {

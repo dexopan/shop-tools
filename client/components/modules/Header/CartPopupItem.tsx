@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { deleteFromCart } from '@/store/cartSlice';
+import { setCart } from '@/store/cartSlice';
 import { formatPrice } from '@/utils/common';
 import DeleteSvg from '@/components/elements/svg/DeleteSvg';
 import CartItemCounter from '@/components/elements/cartItemCounter/CartItemCounter';
@@ -25,8 +25,8 @@ const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
 	const deleteCartItem = async () => {
 		try {
 			setSpinner(true)
-			await deleteItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.tool.id })
-			dispatch(deleteFromCart(item.tool.id))
+			const data = await deleteItemFromCart({ url: '/api/basket/delete', userId: user.id, toolId: item.tool.id })
+			dispatch(setCart(data))
 		} catch (error) {
 			toast.error((error as Error).message)
 		} finally {
