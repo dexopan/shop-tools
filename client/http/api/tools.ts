@@ -29,3 +29,12 @@ export const getToolsWithLimit = async (url: string) => {
 		showAuthError(error.response)
 	}
 }
+
+export const getOneTool = async (url: string) => {
+	try {
+		const { data } = await $authHost.get(url)
+		return data
+	} catch (error: any) {
+		showAuthError(error.response)
+	}
+}

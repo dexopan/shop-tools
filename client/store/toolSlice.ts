@@ -14,6 +14,7 @@ type InitialState = {
 	typesTools: IFilterCheckboxItem[]
 	checkedManufacturers: string[]
 	checkedTypesTools: string[]
+	oneTool: ITool
 };
 
 const initialState: InitialState = {
@@ -23,6 +24,7 @@ const initialState: InitialState = {
 	typesTools: typesTools as IFilterCheckboxItem[],
 	checkedManufacturers: JSON.parse(localStorage.getItem('manufacturers') || '[]') as string[],
 	checkedTypesTools: JSON.parse(localStorage.getItem('typesTools') || '[]') as string[],
+	oneTool: {} as ITool
 };
 
 
@@ -69,6 +71,9 @@ const toolSlice = createSlice({
 					item.checked = action.payload.checked;
 				}
 			});
+		},
+		setOneTool(state, action) {
+			state.oneTool = action.payload;
 		}
 	}
 });
@@ -78,6 +83,8 @@ export const {
 	setAllTools, setToolWithLimit,
 	setManufacturers, setTypesTools,
 	updateManufacturers, updateTypesTools,
-	setCheckedManufacturers, setCheckedTypesTools } = toolSlice.actions;
+	setCheckedManufacturers, setCheckedTypesTools,
+	setOneTool
+} = toolSlice.actions;
 
 export default toolSlice.reducer;
