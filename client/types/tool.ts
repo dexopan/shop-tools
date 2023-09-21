@@ -40,3 +40,17 @@ export interface IToggleCartItem {
 	isInCart: boolean
 	setSpinner: (arg0: boolean) => void
 }
+
+
+export interface IToolPageProps {
+	params: {
+		toolId: string
+	}
+}
+
+
+export interface IToolImagesItemProps {
+	src: string
+	callback: (arg0: string) => void
+	alt: string
+}
