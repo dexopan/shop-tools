@@ -27,7 +27,7 @@ const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, se
 			const cartItems = await getCartItems(`/api/basket/${username}`)
 			dispatch(setCart(cartItems[0]))
 		} catch (error) {
-			toast.error((error as Error).message)
+			toast.warning('Something went wrong')
 		}
 	}
 
