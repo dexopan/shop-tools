@@ -54,3 +54,9 @@ export interface IToolImagesItemProps {
 	callback: (arg0: string) => void
 	alt: string
 }
+
+
+export interface IToolAccordionProps {
+	children: React.ReactNode
+	title: string
+}

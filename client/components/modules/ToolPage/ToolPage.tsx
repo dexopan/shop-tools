@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setCart } from '@/store/cartSlice';
+import { setToolWithLimit } from '@/store/toolSlice';
 import { formatPrice } from '@/utils/common';
 import { addItemToCart, deleteItemFromCart } from '@/http/api/cart';
+import { getToolsWithLimit } from '@/http/api/tools';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import ToolImagesList from './ToolImagesList';
+import ToolTabs from './ToolTabs';
 import CartHoverCheckedSvg from '@/components/elements/svg/CartHoverCheckedSvg';
 import CartHoverSvg from '@/components/elements/svg/CartHoverSvg';
+import DashboardSlider from '../dashboardPage/DashboardSlider';
+import ToolAccordion from './ToolAccordion';
 import spinnerStyles from '@/styles/spinner/index.module.scss'
 import styles from "@/styles/tool/index.module.scss"
 
@@ -17,9 +23,12 @@ const ToolPage = () => {
 	const tool = useAppSelector(state => state.tools.oneTool)
 	const cart = useAppSelector(state => state.cart.cart)
 	const user = useAppSelector(state => state.user.user)
+	const limitTools = useAppSelector(state => state.tools.limitTools)
 	const isInCart = cart.tools.some(cartItem => cartItem.tool.id === tool.id)
 	const [spinnerToggleCart, setSpinnerToggleCart] = useState(false)
+	const [spinnerSlider, setSpinnerSlider] = useState(false)
 	const dispatch = useAppDispatch()
+	const isMobile = useMediaQuery(850)
 
 	const toggleCartItem = async () => {
 		try {
@@ -38,8 +47,24 @@ const ToolPage = () => {
 		}
 	}
 
+	useEffect(() => {
+		loadTools()
+	}, [])
+
+	const loadTools = async () => {
+		try {
+			setSpinnerSlider(true)
+			const data = await getToolsWithLimit('/api/tool?limit=10&offset=0&sort=popular&manufacturers=&typesTools=')
+			dispatch(setToolWithLimit(data))
+		} catch (error) {
+			toast.error((error as Error).message)
+		} finally {
+			setSpinnerSlider(false)
+		}
+	}
+
 	return (
-		<section>
+		<section className={styles.tool}>
 			<div className='container'>
 				<div className={`${styles.tool__top} ${darkModeClass}`}>
 					<h2 className={`${styles.tool__title} ${darkModeClass}`}>
@@ -49,7 +74,7 @@ const ToolPage = () => {
 						<ToolImagesList />
 						<div className={styles.tool__info}>
 							<span className={`${styles.tool__info__price} ${darkModeClass}`}>
-								{formatPrice(tool.priceOne) || 0} P
+								{formatPrice(tool.priceOne || 0)} P
 							</span>
 							<span className={styles.tool__info__stock}>
 								{tool.inStock ?
@@ -73,8 +98,38 @@ const ToolPage = () => {
 										</span>
 									</>}
 							</button>
+							{!isMobile && <ToolTabs />}
 						</div>
 					</div>
+				</div>
+				{isMobile && (
+					<div className={styles.tool__accordion}>
+						<div className={styles.tool__accordion__inner}>
+							<ToolAccordion title='Description'>
+								<div className={`${styles.tool__accordion__content} ${darkModeClass}`}>
+									<h3 className={`${styles.tool__tabs__content__title} ${darkModeClass}`}>
+										{tool.name}
+									</h3>
+									<p className={`${styles.tool__tabs__content__text} ${darkModeClass}`}>
+										{tool.description}
+									</p>
+								</div>
+							</ToolAccordion>
+						</div>
+						<ToolAccordion title='Characteristics'>
+							<div className={`${styles.tool__accordion__content} ${darkModeClass}`}>
+								<p className={`${styles.tool__tabs__content__text} ${darkModeClass}`}>
+									{tool.vendorCode}
+								</p>
+							</div>
+						</ToolAccordion>
+					</div>
+				)}
+				<div>
+					<h2 className={`${styles.tool__title}  ${darkModeClass}`}>
+						You will like it
+					</h2>
+					<DashboardSlider items={limitTools} goToToolPage={true} spinner={spinnerSlider} />
 				</div>
 			</div>
 		</section>
