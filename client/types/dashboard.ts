@@ -3,7 +3,7 @@ import { ITool } from "@/types/tool";
 export interface IDashboardSlider {
 	items: ITool[]
 	spinner: boolean
-	goToPartPage?: boolean
+	goToToolPage?: boolean
 }
 
 export interface ICartAlertProps {

@@ -12,7 +12,7 @@ import styles from '@/styles/dashboard/index.module.scss'
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
 
 
-const DashboardSlider = ({ items, spinner, goToPartPage }: IDashboardSlider) => {
+const DashboardSlider = ({ items, spinner, goToToolPage }: IDashboardSlider) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	const isMedia768 = useMediaQuery(768)
@@ -65,8 +65,8 @@ const DashboardSlider = ({ items, spinner, goToPartPage }: IDashboardSlider) => 
 						<div className={`${styles.dashboard__slide} ${darkModeClass}`} key={item.id} style={width}>
 							<img src={item.images[0]} alt={item.name} />
 							<div className={styles.dashboard__slide__inner}>
-								<Link href={goToPartPage ? `catalog/${item.id}` : `/catalog`} passHref legacyBehavior>
-									<a href="">
+								<Link href={goToToolPage ? `/catalog/${item.id}` : `/catalog`} passHref legacyBehavior>
+									<a >
 										<h3 className={styles.dashboard__slide__title}>
 											{item.name}
 										</h3>

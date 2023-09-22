@@ -31,7 +31,7 @@ const CatalogItem = ({ item }: { item: ITool }) => {
 			}
 			const data = await addItemToCart({ url: '/api/basket/add', userId: user.id, toolId: item.id })
 			dispatch(setCart(data))
-		} catch (error: any) {
+		} catch (error) {
 			toast.error((error as Error).message)
 		} finally {
 			setSpinner(false)

@@ -12,11 +12,13 @@ export default function Tool({ params: { toolId } }: IToolPageProps) {
 	const { shouldLoadContent } = useRedirectByUserCheck();
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? 'dark_mode' : '';
-	const tool = useAppSelector(state => state.tools.oneTool)
 	const dispatch = useAppDispatch()
 
 	const loadOneTool = async () => {
 		const data = await getOneTool(`/api/tool/search/${toolId}`)
+		if (!data) {
+			window.location.replace('/main')
+		}
 		dispatch(setOneTool(data))
 	}
 

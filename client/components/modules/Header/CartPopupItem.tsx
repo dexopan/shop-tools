@@ -57,7 +57,7 @@ const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
 			</div>
 			<div className={styles.cart__popup__list__item__bottom}>
 				{item.tool.inStock === 0 ? (
-					<span className={styles.cart__popup__list__item__empty}>Out of stock</span>
+					<span className={styles.cart__popup__list__item__empty}>Not in stock</span>
 				) : (
 					<CartItemCounter item={item} />
 				)}

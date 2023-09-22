@@ -42,7 +42,7 @@ const DashboardPage = () => {
 
 	return (
 		<section className={styles.dashboard}>
-			<div className={`container ${styles.dashboard__container}`}>
+			<div className='container'>
 				<AnimatePresence>
 					{showAlert && <motion.div
 						initial={{ opacity: 0 }}
@@ -60,11 +60,11 @@ const DashboardPage = () => {
 				<h2 className={`${styles.dashboard__title} ${darkModeClass}`}>Tools</h2>
 				<div className={styles.dashboard__parts}>
 					<h3 className={`${styles.dashboard__parts__title} ${darkModeClass}`}>Bestsellers</h3>
-					<DashboardSlider items={bestsellers} spinner={spinner} goToPartPage={true} />
+					<DashboardSlider items={bestsellers} spinner={spinner} goToToolPage={true} />
 				</div>
 				<div className={styles.dashboard__parts}>
 					<h3 className={`${styles.dashboard__parts__title} ${darkModeClass}`}>New</h3>
-					<DashboardSlider items={newParts} spinner={spinner} />
+					<DashboardSlider items={newParts} spinner={spinner} goToToolPage={true} />
 				</div>
 				<div className={styles.dashboard__about}>
 					<h3 className={`${styles.dashboard__parts__title} ${styles.dashboard__about__title} ${darkModeClass}`}>

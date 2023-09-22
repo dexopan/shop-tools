@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import styles from "@/styles/tool/index.module.scss"
 
 const ToolSlider = ({ images }: { images: string[] }) => {
-	const isMobile700 = useMediaQuery(700)
+	const isMobile850 = useMediaQuery(850)
 	const isMobile530 = useMediaQuery(530)
 	const settings = {
 		dots: false,
@@ -22,7 +22,7 @@ const ToolSlider = ({ images }: { images: string[] }) => {
 				<div
 					key={i}
 					className={styles.tool__slide}
-					style={{ width: isMobile530 ? 228 : isMobile700 ? 350 : 593 }}>
+					style={{ width: isMobile530 ? 228 : isMobile850 ? 350 : 593 }}>
 					<img src={item} alt={`image-${i + 1}`} />
 				</div>
 			))}
