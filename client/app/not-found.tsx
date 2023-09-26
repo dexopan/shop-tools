@@ -1,6 +1,9 @@
-import Link from 'next/link'
+'use client';
 
 const NotFound = () => {
+	const redirectToMain = () => {
+		window.location.replace('/main')
+	}
 	return (
 		<div id="notfound">
 			<div className="notfound">
@@ -8,9 +11,7 @@ const NotFound = () => {
 					<h1>4<span>0</span>4</h1>
 				</div>
 				<p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
-				<Link className='notfound__link' href="/main" passHref legacyBehavior>
-					<span>HOME PAGE </span>
-				</Link>
+				<button className='notfound__link' onClick={redirectToMain}>HOME PAGE </button>
 			</div>
 		</div>
 	)

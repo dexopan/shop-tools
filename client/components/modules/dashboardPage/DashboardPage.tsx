@@ -50,7 +50,7 @@ const DashboardPage = () => {
 						exit={{ opacity: 0 }}
 						className={`${styles.dashboard__alert} ${darkModeClass}`}
 					>
-						<CartAlert closeAlert={closeAlert} count={cart.tools.length} />
+						<CartAlert closeAlert={closeAlert} quantity={cart.quantity} />
 					</motion.div>
 					}
 				</AnimatePresence>

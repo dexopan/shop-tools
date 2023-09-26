@@ -4,25 +4,25 @@ import { ICartAlertProps } from "@/types/dashboard"
 import { formatPrice } from "@/utils/common";
 import styles from '@/styles/dashboard/index.module.scss'
 
-const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
+const CartAlert = ({ quantity, closeAlert }: ICartAlertProps) => {
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
 	const cart = useAppSelector(state => state.cart.cart)
 
 	const showCountMessage = (count: number) => {
 		if (count === 0) {
-			return 'There are no items in the cart'
+			return 'There are no products in the cart'
 		} else if (count === 1) {
-			return 'There is 1 item in the cart'
+			return 'There is 1 product in the cart'
 		} else {
-			return `There are ${count} items in the cart`
+			return `There are ${count} products in the cart`
 		}
 	}
 
 	return (
 		<>
 			<div className={`${styles.dashboard__alert__left} ${darkModeClass}`}>
-				<span>{showCountMessage(count)} </span>
+				<span>{showCountMessage(quantity)} </span>
 				<span>For the amount of {formatPrice(cart.totalPrice)} P </span>
 			</div>
 			<div className={styles.dashboard__alert__right}>

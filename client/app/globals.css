@@ -194,6 +194,7 @@
 	padding: 10px 25px;
 	font-weight: 700;
 	transition: .2s all;
+	cursor: pointer;
 }
 
 .notfound__link:hover {

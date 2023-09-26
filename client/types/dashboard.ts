@@ -7,6 +7,6 @@ export interface IDashboardSlider {
 }
 
 export interface ICartAlertProps {
-	count: number
+	quantity: number
 	closeAlert: VoidFunction
 }
