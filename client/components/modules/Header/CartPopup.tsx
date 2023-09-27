@@ -41,7 +41,7 @@ const CartPopup = forwardRef<HTMLDivElement, IWrapperComponentProps>(({ open, se
 	return (
 		<div className={styles.cart} ref={ref}>
 			<button className={`${styles.cart__btn} ${darkModeClass}`} onClick={toggleCartDropdown} disabled={isOrderPage}>
-				{!!cart.tools.length && <span className={styles.cart__btn__count}>{cart.tools.length}</span>}
+				{(!!cart.tools.length && !isOrderPage) && <span className={styles.cart__btn__count}>{cart.tools.length}</span>}
 				<span className={styles.cart__svg}>
 					<ShoppingCartSvg />
 				</span>

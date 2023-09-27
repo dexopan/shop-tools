@@ -28,7 +28,6 @@ const OrderPage = () => {
 						<div className={`${styles.order__pay__inner} ${darkModeClass}`}>
 							<div className={styles.order__pay__products}>
 								<span>Products ({cart.quantity}) </span>
-								<span>{formatPrice(cart.totalPrice)} P</span>
 							</div>
 							<div className={styles.order__pay__total}>
 								<span>For the amount of </span>

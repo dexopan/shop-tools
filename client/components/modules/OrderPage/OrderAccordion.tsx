@@ -55,7 +55,7 @@ const OrderAccordion = ({ setOrderIsReady, showDoneIcon }: IOrderAccordionProps)
 							collapsed: { opacity: 0, height: 0 }
 						}}
 						style={{ overflow: "hidden" }}
-						transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
+						transition={{ duration: 0.8, ease: [0.5, 0.62, 0.23, 0.98] }}
 					>
 						<div className={`${styles.order__cart__content} ${darkModeClass}`}>
 							<ul className={styles.order__cart__list}>

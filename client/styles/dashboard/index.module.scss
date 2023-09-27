@@ -79,46 +79,37 @@
 
 		&__btn_cart {
 			margin-right: 24px;
-			background-color: #f2f2f2;
-			border: 1px solid #2d2d2d;
-			color: #2d2d2d;
+			background-color: #ebf5fd;
+			border: 1px solid #1c629e;
+			color: #1c629e;
 
 			@media (max-width: 768px) {
 				margin-right: 0;
 				margin-bottom: 16px;
 			}
-			&.dark_mode {
-				background-color: #222;
-				border: 1px solid #f2f2f2;
-				color: #f2f2f2;
-				&:hover {
-					color: #ffcf62;
-					border: 1px solid #ffcf62;
-				}
-			}
 			&:hover {
-				background-color: #222;
-				color: #ffcf62;
+				background-color: #1c629e;
+				color: #ebf5fd;
+				transition:
+					background-color 0.2s ease-in-out,
+					color 0.2s ease-in-out,
+					border-color 0.2s ease-in-out;
 			}
 		}
 
 		&__btn_order {
-			background-color: #2d2d2d;
-			border: 1px solid #2d2d2d;
+			background-color: #1c629e;
 			color: #f2f2f2;
+			border: 1px solid transparent;
 
-			&.dark_mode {
-				background-color: #f2f2f2;
-				border: 1px solid #f2f2f2;
-				color: #2d2d2d;
-				&:hover {
-					background-color: #222;
-					border: 1px solid #ffcf62;
-					color: #ffcf62;
-				}
-			}
 			&:hover {
-				color: #ffcf62;
+				background-color: #ebf5fd;
+				color: #1c629e;
+				border-color: #1c629e;
+				transition:
+					background-color 0.2s ease-in-out,
+					color 0.2s ease-in-out,
+					border-color 0.2s ease-in-out;
 			}
 		}
 
@@ -138,7 +129,7 @@
 
 			&::before,
 			&::after {
-				content: '';
+				content: "";
 				position: absolute;
 				top: 0;
 				right: 0;
@@ -280,7 +271,7 @@
 	}
 
 	&__title {
-		font-family: 'Raleway';
+		font-family: "Raleway";
 		font-weight: 500;
 		font-size: 55px;
 		margin: 0;
@@ -397,7 +388,7 @@
 
 	&__parts {
 		&__title {
-			font-family: 'Raleway';
+			font-family: "Raleway";
 			font-weight: 500;
 			font-size: 36px;
 			margin: 0;
