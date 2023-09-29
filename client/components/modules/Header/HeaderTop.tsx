@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useAppSelector } from '@/store'
 import CityButton from '@/components/elements/header/CityButton'
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme'
@@ -12,6 +13,8 @@ const HeaderTop = () => {
 	const { open, toggleOpen, closePopup } = usePopup()
 	const theme = useAppSelector(state => state.theme.theme)
 	const darkModeClass = theme === 'dark' ? `${styles.dark_mode}` : '';
+	const path = usePathname()
+
 	return (
 		<div className={styles.header__top}>
 			<div className={`container ${styles.header__top__container}`}>
@@ -27,35 +30,40 @@ const HeaderTop = () => {
 					<ul className={styles.header__nav__list}>
 						<li className={styles.header__nav__list__item}>
 							<Link href='/shipping-payment' passHref legacyBehavior >
-								<a className={`${styles.header__nav__list__item__link} ${darkModeClass}`} onClick={closePopup}>
+								<a className={`${styles.header__nav__list__item__link} ${darkModeClass} ${path === '/shipping-payment' ? styles.active : ''}`}
+									onClick={closePopup}>
 									Delivery & Payment
 								</a>
 							</Link>
 						</li>
 						<li className={styles.header__nav__list__item}>
 							<Link href='/about' passHref legacyBehavior >
-								<a className={`${styles.header__nav__list__item__link} ${darkModeClass}`} onClick={closePopup}>
+								<a className={`${styles.header__nav__list__item__link} ${darkModeClass} ${path === '/about' ? styles.active : ''}`}
+									onClick={closePopup}>
 									About Us
 								</a>
 							</Link>
 						</li>
 						<li className={styles.header__nav__list__item}>
 							<Link href='/catalog' passHref legacyBehavior >
-								<a className={`${styles.header__nav__list__item__link} ${darkModeClass}`} onClick={closePopup}>
+								<a className={`${styles.header__nav__list__item__link} ${darkModeClass} ${path === '/catalog' ? styles.active : ''}`}
+									onClick={closePopup}>
 									Catalog
 								</a>
 							</Link>
 						</li>
 						<li className={styles.header__nav__list__item}>
 							<Link href='/contacts' passHref legacyBehavior >
-								<a className={`${styles.header__nav__list__item__link} ${darkModeClass}`} onClick={closePopup}>
+								<a className={`${styles.header__nav__list__item__link} ${darkModeClass} ${path === '/contacts' ? styles.active : ''}`}
+									onClick={closePopup}>
 									Contacts
 								</a>
 							</Link>
 						</li>
 						<li className={styles.header__nav__list__item}>
 							<Link href='/wholesale-buyer' passHref legacyBehavior >
-								<a className={`${styles.header__nav__list__item__link} ${darkModeClass}`} onClick={closePopup}>
+								<a className={`${styles.header__nav__list__item__link} ${darkModeClass} ${path === '/wholesale-buyer' ? styles.active : ''}`}
+									onClick={closePopup}>
 									Wholesale buyer
 								</a>
 							</Link>
