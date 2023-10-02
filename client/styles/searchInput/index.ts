@@ -32,8 +32,6 @@ export const menuStyles = (
 	boxShadow: 'none',
 	borderRadius: '4px',
 	border: 'none',
-	borderTopRightRadius: 0,
-	borderTopLeftRadius: 0,
 	height: 'auto',
 	overflow: 'hidden',
 	backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',

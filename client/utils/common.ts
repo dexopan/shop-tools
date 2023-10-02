@@ -20,3 +20,15 @@ export const idGenerator = () => {
 	return (
 		S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
 }
+
+export const toggleClassNameForOverlayAndBody = (overlayClassName = 'open') => {
+	document.querySelector('.overlay')?.classList.toggle(overlayClassName)
+	document.body.classList.add('body')
+	document.querySelector('.body')?.classList.toggle('overflow-hidden')
+}
+
+export const removeClassNameForOverlayAndBody = () => {
+	document.querySelector('.overlay')?.classList.remove('open')
+	document.querySelector('.overlay')?.classList.remove('open-search')
+	document.querySelector('.body')?.classList.remove('overflow-hidden')
+}
