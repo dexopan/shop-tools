@@ -38,3 +38,21 @@ export const getOneTool = async (url: string) => {
 		showAuthError(error.response)
 	}
 }
+
+export const getToolsBySearch = async ({ url, search }: { url: string, search: string }) => {
+	try {
+		const { data } = await $authHost.post(url, { search })
+		return data
+	} catch (error: any) {
+		showAuthError(error.response)
+	}
+}
+
+export const getToolsByName = async ({ url, name }: { url: string, name: string }) => {
+	try {
+		const { data } = await $authHost.post(url, { name })
+		return data
+	} catch (error: any) {
+		showAuthError(error.response)
+	}
+}

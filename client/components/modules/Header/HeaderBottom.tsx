@@ -1,11 +1,10 @@
 'use client';
 import Link from 'next/link';
+import { useAppSelector } from '@/store';
 import SearchInput from '@/components/elements/header/SearchInput';
-import SearchSvg from '@/components/elements/svg/SearchSvg';
 import TogglerTheme from '@/components/elements/togglerTheme/togglerTheme';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CartPopup from './CartPopup';
-import { useAppSelector } from '@/store';
 import styles from '@/styles/header/index.module.scss'
 
 const HeaderBottom = () => {
@@ -25,9 +24,6 @@ const HeaderBottom = () => {
 				</h1>
 				<div className={styles.header__search}>
 					<SearchInput />
-					<button className={`${styles.header__search__btn} ${darkModeClass}`} >
-						<span className={styles.header__search__btn__span}> <SearchSvg /> </span>
-					</button>
 				</div>
 				<div className={styles.header__shopping_cart}>
 					{!isMedia950 && <TogglerTheme />}
@@ -35,7 +31,6 @@ const HeaderBottom = () => {
 				</div>
 			</div >
 		</div >
-
 	)
 }
 
